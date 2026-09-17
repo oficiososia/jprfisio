@@ -30,7 +30,7 @@
     h1{font-size:clamp(48px,5vw,76px);line-height:1.02;letter-spacing:-.055em;font-weight:600;max-width:720px}
     h2{font-size:clamp(36px,4vw,58px);line-height:1.08;letter-spacing:-.045em;font-weight:500}
     .muted{color:var(--muted)}
-    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 21px;border:1px solid var(--ink);
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 21px;border:1px solid var(--ink);white-space:nowrap;
       border-radius:10px;font-size:14px;font-weight:600;transition:.25s ease;cursor:pointer;background:transparent}
     .btn.dark{background:var(--ink);color:white}
     .btn:hover{transform:translateY(-2px)} .btn.dark:hover{background:#333}
@@ -39,7 +39,8 @@
     nav{height:68px;padding:0 18px 0 24px;display:flex;align-items:center;justify-content:space-between;gap:28px}
     header .btn.dark{background:#EEEAE2;color:#3F3025;border-color:rgba(255,248,239,.38)}
     header .btn.dark:hover{background:#F7F3EA}
-    .brand{font-size:13px;line-height:1.2;font-weight:700;letter-spacing:.02em}
+    .brand{display:flex;align-items:center;gap:11px;font-size:13px;line-height:1.2;font-weight:700;letter-spacing:.02em}
+    .brand-logo{display:block;width:58px;height:46px;object-fit:contain;flex:0 0 auto}
     .brand small{display:block;color:rgba(255,248,239,.72);font-weight:500;margin-top:3px}
     .links{display:flex;align-items:center;gap:25px;font-size:13px}
     .links a:not(.btn){position:relative}
@@ -131,7 +132,7 @@
 <body>
 <header>
   <nav>
-    <a class="brand" href="#inicio">JORGE PLANELLES RICARTE<small>Fisioterapeuta</small></a>
+    <a class="brand" href="#inicio"><img class="brand-logo" src="blanco.PNG" alt=""><span>JORGE PLANELLES RICARTE<small>Fisioterapeuta</small></span></a>
     <div class="links">
       <a href="#inicio">Inicio</a><a href="#sobre-mi">Sobre mí</a>
       <a href="#metodologia">Metodología</a><a href="#testimonios">Testimonios</a><a href="#preguntas">Preguntas</a>

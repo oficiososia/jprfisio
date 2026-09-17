@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --paper:#F7F6F2; --cream:#EEEAE2; --white:#fff; --ink:#171717;
+      --paper:#F7F6F2; --bone:#F3F0E9; --cream:#EEEAE2; --white:#fff; --ink:#171717;
       --dark:#363636; --muted:#77746F; --line:#D8D4CC;
       --pad:clamp(22px,6vw,92px); --max:1440px; --radius:14px;
     }
@@ -61,7 +61,7 @@
     .photo:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,0,0,.025))}
     .placeholder{position:absolute;inset:0;display:flex;align-items:flex-end;padding:24px;color:#66645f;font-size:11px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;max-width:430px}
     .photo-note{position:absolute;right:-20px;top:48px;writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
-    .manifesto{padding:150px var(--pad);text-align:center;background:#F3F0E9}
+    .manifesto{padding:150px var(--pad);text-align:center;background:var(--bone)}
     .manifesto p{font-size:clamp(30px,4vw,54px);line-height:1.18;letter-spacing:-.04em;max-width:980px;margin:auto}
     section{padding:150px 0}
     .about-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:9vw;align-items:start}
@@ -70,7 +70,7 @@
     .about-copy h2{max-width:690px}
     .about-copy .bio{max-width:580px;margin-top:36px;color:var(--dark)}
     .signature{font-size:22px;margin-top:70px;letter-spacing:-.02em}
-    .services{background:var(--cream)}
+    .services{background:var(--bone)}
     .section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:70px;gap:30px}
     .section-head h2{margin:0;max-width:750px}
     .service-list{border-top:1px solid #c9c5bd}
@@ -84,7 +84,7 @@
     .steps{border-top:1px solid var(--line)}
     .step{display:grid;grid-template-columns:55px 1fr;padding:28px 0;border-bottom:1px solid var(--line)}
     .step b{font-size:12px}.step h3{font-size:25px;margin-bottom:7px}.step p{margin:0;color:var(--muted);font-size:15px}
-    .movement{padding:0 var(--pad) 150px}
+    .movement{padding:0 var(--pad) 150px;background:var(--bone)}
     .movement-photo{height:min(68vw,760px)}
     .movement-copy{display:flex;justify-content:flex-end;padding-top:46px}
     .movement-copy p{font-size:clamp(28px,3.5vw,48px);line-height:1.2;letter-spacing:-.04em;max-width:780px}
@@ -100,7 +100,7 @@
     summary:after{content:"+";font-size:22px;font-weight:300;transition:.25s}
     details[open] summary:after{transform:rotate(45deg)}
     details p{padding-left:58px;max-width:650px;color:var(--muted);font-size:15px;margin:20px 0 0}
-    .final-cta{background:var(--cream);padding:130px var(--pad)}
+    .final-cta{background:var(--bone);padding:130px var(--pad)}
     .final-cta .inner{display:grid;grid-template-columns:1.4fr .6fr;gap:50px;align-items:end}
     .final-cta h2{font-size:clamp(42px,5.5vw,74px);max-width:850px;margin-bottom:16px}
     footer{background:var(--ink);color:white;padding:90px var(--pad) 40px}

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Jorge Planelles Ricarte — Fisioterapeuta. Fisioterapia, movimiento y recuperación.">
+  <title>Jorge Planelles Ricarte — Fisioterapeuta</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23eeeae2'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial' font-size='22' font-weight='700' fill='%23171717'%3EJR%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --paper:#F7F6F2; --cream:#EEEAE2; --white:#fff; --ink:#171717;
+      --dark:#363636; --muted:#77746F; --line:#D8D4CC;
+      --pad:clamp(22px,6vw,92px); --max:1440px; --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font-family:Manrope,Arial,sans-serif;
+      font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    .wrap{width:min(calc(100% - var(--pad)*2),var(--max));margin:auto}
+    .eyebrow,.section-id{font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:700}
+    .eyebrow-group{display:inline-grid;gap:6px;width:max-content;max-width:100%;justify-items:center;padding-bottom:2px}
+    .eyebrow-group .eyebrow{position:relative;z-index:1;margin:0;line-height:1.4}
+    .eyebrow-secondary{width:100%;font-size:11px;letter-spacing:.19em;font-weight:600;text-align:center;color:rgba(23,23,23,.28)}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(48px,5vw,76px);line-height:1.02;letter-spacing:-.055em;font-weight:600;max-width:720px}
+    h2{font-size:clamp(36px,4vw,58px);line-height:1.08;letter-spacing:-.045em;font-weight:500}
+    .muted{color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 21px;border:1px solid var(--ink);
+      border-radius:10px;font-size:14px;font-weight:600;transition:.25s ease;cursor:pointer;background:transparent}
+    .btn.dark{background:var(--ink);color:white}
+    .btn:hover{transform:translateY(-2px)} .btn.dark:hover{background:#333}
+    header{position:fixed;z-index:50;top:18px;left:50%;transform:translateX(-50%);width:min(calc(100% - 36px),1380px);
+      background:rgba(238,234,226,.92);backdrop-filter:blur(12px);border:1px solid rgba(23,23,23,.08);border-radius:13px}
+    nav{height:68px;padding:0 18px 0 24px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+    .brand{font-size:13px;line-height:1.2;font-weight:700;letter-spacing:.02em}
+    .brand small{display:block;color:var(--muted);font-weight:500;margin-top:3px}
+    .links{display:flex;align-items:center;gap:25px;font-size:13px}
+    .links a:not(.btn){position:relative}
+    .links a:not(.btn):after{content:"";position:absolute;left:0;bottom:-4px;width:100%;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .25s}
+    .links a:hover:after{transform:scaleX(1);transform-origin:left}
+    .menu{display:none;background:none;border:0;font-size:13px}
+    .hero{min-height:92vh;padding:130px var(--pad) 55px;display:grid;grid-template-columns:minmax(0,45fr) minmax(0,55fr);gap:6vw;align-items:center}
+    .hero-copy{max-width:680px}
+    .hero .eyebrow-group{margin-bottom:34px}
+    .hero p{max-width:560px;color:var(--dark);font-size:18px}
+    .actions{display:flex;gap:13px;margin-top:34px;align-items:center;flex-wrap:wrap}
+    .text-link{font-size:14px;border-bottom:1px solid var(--line);padding:10px 2px}
+    .photo{position:relative;background:var(--cream);overflow:hidden;border-radius:var(--radius)}
+    .hero-photo{height:min(72vh,760px)}
+    .photo img{display:block;width:100%;height:100%;object-fit:cover}
+    .photo:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,0,0,.025))}
+    .placeholder{position:absolute;inset:0;display:flex;align-items:flex-end;padding:24px;color:#66645f;font-size:11px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;max-width:430px}
+    .photo-note{position:absolute;right:-20px;top:48px;writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+    .manifesto{padding:150px var(--pad);text-align:center;background:var(--white)}
+    .manifesto p{font-size:clamp(30px,4vw,54px);line-height:1.18;letter-spacing:-.04em;max-width:980px;margin:auto}
+    section{padding:150px 0}
+    .about-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:9vw;align-items:start}
+    .about-photo{height:570px;margin-top:72px}
+    .about-copy .section-id{margin-bottom:72px}
+    .about-copy h2{max-width:690px}
+    .about-copy .bio{max-width:580px;margin-top:36px;color:var(--dark)}
+    .signature{font-size:22px;margin-top:70px;letter-spacing:-.02em}
+    .services{background:var(--cream)}
+    .section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:70px;gap:30px}
+    .section-head h2{margin:0;max-width:750px}
+    .service-list{border-top:1px solid #c9c5bd}
+    .service{display:grid;grid-template-columns:80px 1fr minmax(260px,390px);gap:20px;padding:30px 0;border-bottom:1px solid #c9c5bd;align-items:center;transition:.3s}
+    .service .num{font-size:12px;color:var(--muted)}
+    .service h3{font-size:clamp(24px,2.6vw,39px);font-weight:500;letter-spacing:-.035em;margin:0;transition:.3s}
+    .service p{font-size:14px;color:var(--muted);margin:0;opacity:0;transform:translateX(12px);transition:.3s}
+    .service:hover h3{transform:translateX(8px)}
+    .service:hover p{opacity:1;transform:none}
+    .method-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:9vw}
+    .steps{border-top:1px solid var(--line)}
+    .step{display:grid;grid-template-columns:55px 1fr;padding:28px 0;border-bottom:1px solid var(--line)}
+    .step b{font-size:12px}.step h3{font-size:25px;margin-bottom:7px}.step p{margin:0;color:var(--muted);font-size:15px}
+    .movement{padding:0 var(--pad) 150px}
+    .movement-photo{height:min(68vw,760px)}
+    .movement-copy{display:flex;justify-content:flex-end;padding-top:46px}
+    .movement-copy p{font-size:clamp(28px,3.5vw,48px);line-height:1.2;letter-spacing:-.04em;max-width:780px}
+    .testimonials{background:var(--ink);color:white}
+    .quote{max-width:1000px;margin:90px auto 0}
+    .quote blockquote{font-size:clamp(31px,4.5vw,60px);line-height:1.17;letter-spacing:-.045em;margin:0;font-weight:400}
+    .quote-meta{display:flex;justify-content:space-between;border-top:1px solid #444;margin-top:60px;padding-top:20px;font-size:12px;color:#aaa}
+    .faq-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:8vw}
+    details{border-top:1px solid var(--line);padding:23px 0}
+    details:last-child{border-bottom:1px solid var(--line)}
+    summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:48px 1fr 20px;gap:10px;align-items:center;font-size:17px}
+    summary::-webkit-details-marker{display:none}
+    summary:after{content:"+";font-size:22px;font-weight:300;transition:.25s}
+    details[open] summary:after{transform:rotate(45deg)}
+    details p{padding-left:58px;max-width:650px;color:var(--muted);font-size:15px;margin:20px 0 0}
+    .final-cta{background:var(--cream);padding:130px var(--pad)}
+    .final-cta .inner{display:grid;grid-template-columns:1.4fr .6fr;gap:50px;align-items:end}
+    .final-cta h2{font-size:clamp(42px,5.5vw,74px);max-width:850px;margin-bottom:16px}
+    footer{background:var(--ink);color:white;padding:90px var(--pad) 40px}
+    .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:70px;padding-bottom:80px}
+    footer .brand{font-size:17px} footer h4{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#999;margin:0 0 20px}
+    footer p,footer a{font-size:14px;color:#ccc}
+    .map{height:160px;border:1px solid #444;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#777;font-size:11px}
+    .legal{border-top:1px solid #3a3a3a;padding-top:22px;display:flex;justify-content:space-between;gap:20px;font-size:11px;color:#777}
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+    .reveal.on{opacity:1;transform:none}
+    @media(max-width:900px){
+      :root{--pad:36px}.links a:not(.btn){display:none}.menu{display:block}.links{gap:10px}
+      .hero{grid-template-columns:1fr;padding-top:130px;gap:45px;min-height:auto}.hero-photo{height:65vw;min-height:500px}.photo-note{display:none}
+      section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
+      .about-photo{margin-top:0;height:62vw}.about-copy .section-id{margin-bottom:35px}.service{grid-template-columns:55px 1fr}.service p{grid-column:2;opacity:1;transform:none}
+      .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:600px){
+      :root{--pad:22px}header{top:10px;width:calc(100% - 20px)}nav{height:60px;padding:0 12px 0 16px}.links .btn{padding:0 13px;min-height:40px}.menu{display:none}
+      .hero{padding-top:112px;padding-bottom:70px}.hero .eyebrow-group{margin-bottom:28px}.hero p{font-size:16px}.hero-photo{height:112vw;min-height:0}
+      section,.manifesto{padding-top:88px;padding-bottom:88px}.manifesto{text-align:left}.about-photo{height:115vw}
+      .section-head{align-items:start;flex-direction:column;margin-bottom:45px}.service{grid-template-columns:38px 1fr;padding:23px 0}.service h3{font-size:25px}
+      .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:60px}.quote-meta{gap:20px}
+      summary{grid-template-columns:34px 1fr 18px;font-size:15px}details p{padding-left:44px}.final-cta{padding-top:90px;padding-bottom:90px}
+      .footer-grid{grid-template-columns:1fr;gap:45px}.legal{flex-direction:column}
+    }
+    @media(max-width:360px){.eyebrow-group{justify-items:start}.eyebrow-secondary{text-align:left;width:auto}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}*{transition:none!important}}
+  </style>
+</head>
+<body>
+<header>
+  <nav>
+    <a class="brand" href="#inicio">JORGE PLANELLES RICARTE<small>Fisioterapeuta</small></a>
+    <div class="links">
+      <a href="#inicio">Inicio</a><a href="#sobre-mi">Sobre mí</a>
+      <a href="#metodologia">Metodología</a><a href="#testimonios">Testimonios</a><a href="#preguntas">Preguntas</a>
+      <a class="btn dark" href="#contacto">Reservar cita</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+  <div class="hero-copy reveal">
+    <div class="eyebrow-group">
+        <div class="eyebrow">Fisioterapia · Movimiento · Recuperación</div>
+        <div class="eyebrow eyebrow-secondary">Entender · Relacionar · Recuperar</div>
+    </div>
+    <h1>Abordaje global.<br>Solución real.</h1>
+    <p>Fisioterapia centrada en comprender el origen del <strong>dolor</strong> y entender los factores que pueden generarlo para encontrar la mejor forma de abordarlo.</p>
+    <div class="actions"><a class="btn dark" href="#contacto">Reservar cita</a><a class="text-link" href="#metodologia">Conocer mi forma de trabajar →</a></div>
+  </div>
+  <div class="photo hero-photo reveal">
+    <img src="hero.jpg" alt="Jorge realizando tratamiento manual a un paciente en consulta">
+    <span class="photo-note">Consulta · Movimiento · Precisión</span>
+  </div>
+</section>
+
+<div class="manifesto">
+  <p class="reveal">Cada cuerpo tiene una historia.<br>Cada recuperación necesita su propio camino.</p>
+</div>
+
+<section id="sobre-mi">
+  <div class="wrap about-grid">
+    <div class="photo about-photo reveal"><div class="placeholder">Fotografía real — Retrato natural de Jorge dentro de la consulta. Luz lateral natural. Actitud trabajando.</div></div>
+    <div class="about-copy reveal">
+      <div class="section-id">01 — Sobre mí</div>
+      <h2>Fisioterapia centrada en la persona, no solo en la lesión.</h2>
+      <div class="bio"><p>[BIOGRAFÍA PROFESIONAL REAL DE JORGE]</p><p>Este espacio se completará únicamente con información profesional real: enfoque, formación, experiencia y forma de entender la fisioterapia.</p></div>
+      <div class="signature">Escuchar. Entender. Tratar. Recuperar.</div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="servicios">
+  <div class="wrap">
+    <div class="section-head reveal"><div><div class="section-id">02 — Servicios</div><h2>Tratamiento adaptado a cómo te mueves y a lo que necesitas recuperar.</h2></div><div class="muted">01 / 05</div></div>
+    <div class="service-list reveal">
+      <div class="service"><span class="num">01</span><h3>Fisioterapia deportiva</h3><p>Valoración, tratamiento y acompañamiento orientados a recuperar tu capacidad física y volver a tu actividad.</p></div>
+      <div class="service"><span class="num">02</span><h3>Terapia manual</h3><p>Técnicas manuales integradas dentro de un tratamiento adaptado a cada caso.</p></div>
+      <div class="service"><span class="num">03</span><h3>Rehabilitación</h3><p>Un proceso progresivo para recuperar movimiento, función y autonomía.</p></div>
+      <div class="service"><span class="num">04</span><h3>Ejercicio terapéutico</h3><p>Movimiento supervisado y adaptado como parte activa del proceso de recuperación.</p></div>
+      <div class="service"><span class="num">05</span><h3>Readaptación deportiva</h3><p>Trabajo funcional orientado a recuperar las demandas específicas de tu actividad deportiva.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="metodologia">
+  <div class="wrap method-grid">
+    <div class="reveal"><div class="section-id">03 — Metodología</div><h2>Un proceso pensado alrededor de ti.</h2></div>
+    <div class="steps reveal">
+      <div class="step"><b>01</b><div><h3>Escuchar</h3><p>Entender qué ocurre y cómo está afectándote.</p></div></div>
+      <div class="step"><b>02</b><div><h3>Valorar</h3><p>Analizar movimiento, síntomas y contexto.</p></div></div>
+      <div class="step"><b>03</b><div><h3>Tratar</h3><p>Aplicar un tratamiento adaptado al caso.</p></div></div>
+      <div class="step"><b>04</b><div><h3>Recuperar</h3><p>Trabajar para recuperar movimiento y autonomía.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="movement">
+  <div class="photo movement-photo reveal"><div class="placeholder">Fotografía real — paciente realizando ejercicio o movimiento funcional supervisado por Jorge. Encuadre amplio, consulta visible, fotografía dinámica y natural.</div></div>
+  <div class="movement-copy reveal"><p>El objetivo no es solo encontrarte mejor.<br>Es volver a moverte con confianza.</p></div>
+</div>
+
+<section class="testimonials" id="testimonios">
+  <div class="wrap">
+    <div class="section-id reveal">04 — Testimonios</div>
+    <div class="quote reveal">
+      <blockquote>“[TESTIMONIO REAL DEL PACIENTE]”</blockquote>
+      <div class="quote-meta"><span>[NOMBRE / INICIAL DEL PACIENTE] · Reseña verificada</span><span>01 / 04 &nbsp; ← &nbsp; →</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="preguntas">
+  <div class="wrap faq-grid">
+    <div class="reveal"><div class="section-id">05 — Preguntas</div><h2>Antes de tu primera sesión.</h2></div>
+    <div class="reveal">
+      <details><summary><span>01</span><span>¿Necesito algún diagnóstico antes de acudir?</span></summary><p>[RESPUESTA REAL]</p></details>
+      <details><summary><span>02</span><span>¿Cuánto dura una sesión?</span></summary><p>[RESPUESTA REAL]</p></details>
+      <details><summary><span>03</span><span>¿Qué debo llevar a mi primera consulta?</span></summary><p>[RESPUESTA REAL]</p></details>
+      <details><summary><span>04</span><span>¿Trabajas con lesiones deportivas?</span></summary><p>[RESPUESTA REAL]</p></details>
+      <details><summary><span>05</span><span>¿Cómo puedo reservar una cita?</span></summary><p>[RESPUESTA REAL]</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta" id="contacto">
+  <div class="wrap inner reveal">
+    <div><div class="section-id">Reserva</div><h2>Tu recuperación puede empezar hoy.</h2><p class="muted">Da el primer paso y reserva tu próxima sesión.</p></div>
+    <div class="actions"><a class="btn dark" href="#">Reservar cita</a><a class="text-link" href="#">Contactar por WhatsApp →</a></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div><div class="brand">JORGE PLANELLES RICARTE<small>Fisioterapeuta</small></div></div>
+    <div><h4>Contacto</h4><p>[TELÉFONO]<br>[EMAIL]</p><p>[DIRECCIÓN DE LA CONSULTA]</p><p>[HORARIO]</p></div>
+    <div><h4>Ubicación</h4><div class="map">[MAPA / UBICACIÓN DE LA CONSULTA]</div></div>
+  </div>
+  <div class="legal"><span>© 2026 Jorge Planelles Ricarte</span><span>Aviso legal &nbsp;&nbsp; Privacidad &nbsp;&nbsp; Cookies</span></div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

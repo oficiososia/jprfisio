@@ -75,16 +75,6 @@
     .about-copy .bio p{margin-bottom:20px}
     .about-copy .bio p:first-child{color:var(--ink);font-weight:600}
     .about-copy .bio p:last-child{margin-bottom:0}
-    .services{background:var(--bone)}
-    .section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:70px;gap:30px}
-    .section-head h2{margin:0;max-width:750px}
-    .service-list{border-top:1px solid #c9c5bd}
-    .service{display:grid;grid-template-columns:80px 1fr minmax(260px,390px);gap:20px;padding:30px 0;border-bottom:1px solid #c9c5bd;align-items:center;transition:.3s}
-    .service .num{font-size:12px;color:var(--muted)}
-    .service h3{font-size:clamp(24px,2.6vw,39px);font-weight:500;letter-spacing:-.035em;margin:0;transition:.3s}
-    .service p{font-size:14px;color:var(--muted);margin:0;opacity:0;transform:translateX(12px);transition:.3s}
-    .service:hover h3{transform:translateX(8px)}
-    .service:hover p{opacity:1;transform:none}
     .method-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:9vw}
     .steps{border-top:1px solid var(--line)}
     .step{display:grid;grid-template-columns:55px 1fr;padding:28px 0;border-bottom:1px solid var(--line)}
@@ -120,14 +110,13 @@
       :root{--pad:36px}.links a:not(.btn){display:none}.menu{display:block}.links{gap:10px}
       .hero{grid-template-columns:1fr;padding-top:130px;gap:45px;min-height:auto}.hero-photo{width:min(100%,540px);height:auto;justify-self:start}.photo-note{display:none}
       section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
-      .about-photo{margin-top:0;height:62vw}.about-logo{margin-top:28px}.about-copy .section-id{margin-bottom:35px}.service{grid-template-columns:55px 1fr}.service p{grid-column:2;opacity:1;transform:none}
+      .about-photo{margin-top:0;height:62vw}.about-logo{margin-top:28px}.about-copy .section-id{margin-bottom:35px}
       .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:600px){
       :root{--pad:22px}header{top:10px;width:calc(100% - 20px)}nav{height:60px;padding:0 10px 0 8px;gap:8px}.brand{gap:3px;font-size:clamp(8px,2.7vw,12px);overflow:hidden}.brand-logo{width:68px;height:53px}.links .btn{padding:0 11px;min-height:40px}.menu{display:none}
       .hero{padding-top:112px;padding-bottom:70px}.hero .eyebrow-group{display:grid;width:100%;margin:0 auto 28px;text-align:center;justify-items:center}.hero p{font-size:16px}.hero-photo{width:100%;max-width:430px;height:auto}
       section,.manifesto{padding-top:88px;padding-bottom:88px}.manifesto{text-align:center}.about-photo{height:115vw}
-      .section-head{align-items:start;flex-direction:column;margin-bottom:45px}.service{grid-template-columns:38px 1fr;padding:23px 0}.service h3{font-size:25px}
       .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:60px}.quote-meta{gap:20px}
       summary{grid-template-columns:34px 1fr 18px;font-size:15px}details p{padding-left:44px}.final-cta{padding-top:90px;padding-bottom:90px}
       .footer-grid{grid-template-columns:1fr;gap:45px}.legal{flex-direction:column}
@@ -196,22 +185,9 @@
   </div>
 </section>
 
-<section class="services" id="servicios">
-  <div class="wrap">
-    <div class="section-head reveal"><div><div class="section-id">02 — Servicios</div><h2>Tratamiento adaptado a cómo te mueves y a lo que necesitas recuperar.</h2></div><div class="muted">01 / 05</div></div>
-    <div class="service-list reveal">
-      <div class="service"><span class="num">01</span><h3>Fisioterapia deportiva</h3><p>Valoración, tratamiento y acompañamiento orientados a recuperar tu capacidad física y volver a tu actividad.</p></div>
-      <div class="service"><span class="num">02</span><h3>Terapia manual</h3><p>Técnicas manuales integradas dentro de un tratamiento adaptado a cada caso.</p></div>
-      <div class="service"><span class="num">03</span><h3>Rehabilitación</h3><p>Un proceso progresivo para recuperar movimiento, función y autonomía.</p></div>
-      <div class="service"><span class="num">04</span><h3>Ejercicio terapéutico</h3><p>Movimiento supervisado y adaptado como parte activa del proceso de recuperación.</p></div>
-      <div class="service"><span class="num">05</span><h3>Readaptación deportiva</h3><p>Trabajo funcional orientado a recuperar las demandas específicas de tu actividad deportiva.</p></div>
-    </div>
-  </div>
-</section>
-
 <section id="metodologia">
   <div class="wrap method-grid">
-    <div class="reveal"><div class="section-id">03 — Metodología</div><h2>Un proceso pensado alrededor de ti.</h2></div>
+    <div class="reveal"><div class="section-id">02 — Metodología</div><h2>Un proceso pensado alrededor de ti.</h2></div>
     <div class="steps reveal">
       <div class="step"><b>01</b><div><h3>Escuchar</h3><p>Entender qué ocurre y cómo está afectándote.</p></div></div>
       <div class="step"><b>02</b><div><h3>Valorar</h3><p>Analizar movimiento, síntomas y contexto.</p></div></div>
@@ -228,7 +204,7 @@
 
 <section class="testimonials" id="testimonios">
   <div class="wrap">
-    <div class="section-id reveal">04 — Testimonios</div>
+    <div class="section-id reveal">03 — Testimonios</div>
     <div class="quote reveal">
       <blockquote>“[TESTIMONIO REAL DEL PACIENTE]”</blockquote>
       <div class="quote-meta"><span>[NOMBRE / INICIAL DEL PACIENTE] · Reseña verificada</span><span>01 / 04 &nbsp; ← &nbsp; →</span></div>
@@ -238,7 +214,7 @@
 
 <section id="preguntas">
   <div class="wrap faq-grid">
-    <div class="reveal"><div class="section-id">05 — Preguntas</div><h2>Antes de tu primera sesión.</h2></div>
+    <div class="reveal"><div class="section-id">04 — Preguntas</div><h2>Antes de tu primera sesión.</h2></div>
     <div class="reveal">
       <details><summary><span>01</span><span>¿Necesito algún diagnóstico antes de acudir?</span></summary><p>[RESPUESTA REAL]</p></details>
       <details><summary><span>02</span><span>¿Cuánto dura una sesión?</span></summary><p>[RESPUESTA REAL]</p></details>

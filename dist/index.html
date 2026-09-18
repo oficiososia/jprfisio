@@ -48,18 +48,19 @@
     .links a:not(.btn):after{content:"";position:absolute;left:0;bottom:-4px;width:100%;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .25s}
     .links a:hover:after{transform:scaleX(1);transform-origin:left}
     .menu-toggle{display:none;position:relative;align-items:center;justify-content:center;width:46px;height:46px;border:1px solid rgba(255,248,239,.24);border-radius:10px;
-      background:rgba(255,248,239,.08);color:#fff8ef;cursor:pointer;transition:.25s ease}
-    .menu-toggle:hover{background:rgba(255,248,239,.14)}
+      background:#5C4430;color:#fff8ef;cursor:pointer;transition:.25s ease}
+    .menu-toggle:hover{background:#684E39}
     .menu-toggle span{display:block;width:18px;height:1.5px;background:currentColor;border-radius:999px;position:absolute;left:50%;top:50%;transition:transform .25s ease,opacity .2s ease}
     .menu-toggle span:nth-child(1){transform:translate(-50%,calc(-50% - 6px))}
     .menu-toggle span:nth-child(2){transform:translate(-50%,-50%)}
     .menu-toggle span:nth-child(3){transform:translate(-50%,calc(-50% + 6px))}
     .mobile-panel{display:none;position:absolute;right:0;top:calc(100% + 8px);width:min(330px,calc(100vw - 28px));padding:10px;
-      background:rgba(92,68,48,.92);backdrop-filter:blur(18px);border:1px solid rgba(255,248,239,.2);border-radius:13px;
+      background:#5C4430;backdrop-filter:none;border:1px solid #171717;border-radius:13px;
       box-shadow:0 18px 45px rgba(0,0,0,.18);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-8px);transition:.25s ease}
     .mobile-panel a{display:flex;align-items:center;gap:14px;min-height:46px;padding:0 13px;border-radius:9px;color:#fff8ef;font-size:14px;font-weight:600}
+    .mobile-panel a + a{border-top:1px solid #171717}
     .mobile-panel a span{width:24px;color:rgba(255,248,239,.52);font-size:11px;letter-spacing:.12em}
-    .mobile-panel a:hover{background:rgba(255,248,239,.1)}
+    .mobile-panel a:hover{background:#684E39}
     .mobile-panel .mobile-cta{justify-content:center;margin-top:8px;background:#EEEAE2;color:#3F3025}
     body.nav-open .mobile-panel{opacity:1;visibility:visible;pointer-events:auto;transform:none}
     body.nav-open .menu-toggle span:nth-child(1){transform:translate(-50%,-50%) rotate(45deg)}
@@ -200,16 +201,15 @@
     </div>
     <div class="about-copy reveal">
       <div class="section-id">01 — Sobre mí</div>
-      <h2>Fisioterapia centrada en la persona, no solo en la lesión.</h2>
+      <h2>Hola, soy Jorge Planelles Ricarte, fisioterapeuta.</h2>
       <div class="bio">
-        <p>Hola, soy Jorge Planelles Ricarte, fisioterapeuta.</p>
-        <p>Desde que decidí estudiar fisioterapia tuve claro que no quería limitarme a tratar el dolor. Quería comprender qué había detrás de él.</p>
-        <p>Siempre he sentido la necesidad de cuidar y ayudar a los demás, y encontré en la fisioterapia una forma de convertir esa inquietud en mi profesión. Desde entonces, mi manera de pensar se ha mantenido fiel a una misma idea: para poder ayudar a una persona, primero necesito entenderla</p>
-        <p>Entiendo el cuerpo humano como un todo, en el que diferentes sistemas y circunstancias interactúan entre sí. Por eso, cuando una persona llega a mi consulta, trato de comprender qué factores pueden estar contribuyendo a la aparición y al mantenimiento de su sintomatología</p>
-        <p>Es por eso, que para mí, una buena valoración y un buen razonamiento clínico son la base para un buen tratamiento. Antes de decidir qué tratamiento realizar, necesito entender qué estoy viendo, qué puede estar influyendo y qué necesita realmente cada persona.</p>
-        <p>Hay algo que considero especialmente importante: que el paciente entienda qué está ocurriendo.</p>
-        <p>Creo en una fisioterapia en la que la persona participa de forma activa en su recuperación. Por eso, además de trabajar sobre el problema, busco ofrecerle herramientas que pueda aplicar en su día a día y que le ayuden a recuperar su autonomía.</p>
-        <p>Porque recuperarse no significa únicamente que desaparezca el dolor. También significa recuperar la confianza en el propio cuerpo, volver a hacer aquello que nos importa y aprender a gestionar mejor el proceso</p>
+        <p>Desde que decidí estudiar fisioterapia tuve claro que <strong>no quería limitarme a tratar el dolor.</strong> Quería comprender qué había detrás de él.</p>
+        <p>Siempre he sentido la necesidad de cuidar y <strong>ayudar a los demás</strong>, y encontré en la fisioterapia una forma de convertir esa inquietud en mi profesión. Desde entonces, mi manera de pensar se ha mantenido fiel a una misma idea: <strong>para poder ayudar a una persona, primero necesito entenderla</strong></p>
+        <p><strong>Entiendo el cuerpo humano como un todo</strong>, en el que diferentes sistemas y circunstancias interactúan entre sí. Por eso, cuando una persona llega a mi consulta, trato de comprender qué factores pueden estar contribuyendo a la aparición y al mantenimiento de su sintomatología</p>
+        <p>Es por eso, que para mí, <strong>una buena valoración y un buen razonamiento clínico</strong> son la base para un buen tratamiento. Antes de decidir qué tratamiento realizar, necesito entender qué estoy viendo, qué puede estar influyendo y qué necesita realmente cada persona.</p>
+        <p>Hay algo que considero especialmente importante: <strong>que el paciente entienda qué está ocurriendo.</strong></p>
+        <p>Creo en una fisioterapia en la que la persona participa de forma activa en su recuperación. Por eso, además de trabajar sobre el problema, busco ofrecerle herramientas que pueda aplicar en su día a día y que le ayuden a <strong>recuperar su autonomía.</strong></p>
+        <p>Porque recuperarse no significa únicamente que desaparezca el dolor. También significa <strong>recuperar la confianza en el propio cuerpo</strong>, volver a hacer aquello que nos importa y aprender a gestionar mejor el proceso</p>
         <p>Soy una persona curiosa, inquieta y exigente conmigo mismo. Me gusta escuchar, observar y tratar de entender cada caso desde su contexto particular.</p>
         <p>Porque cada cuerpo es diferente. Y cada persona también.</p>
         <p>Mi forma de hacer fisioterapia parte de ahí.</p>

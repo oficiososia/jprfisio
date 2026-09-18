@@ -57,8 +57,8 @@
     .mobile-panel{display:none;position:absolute;right:0;top:calc(100% + 8px);width:min(330px,calc(100vw - 28px));padding:10px;
       background:#5C4430;backdrop-filter:none;border:1px solid #171717;border-radius:13px;
       box-shadow:0 18px 45px rgba(0,0,0,.18);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-8px);transition:.25s ease}
-    .mobile-panel a{display:flex;align-items:center;gap:14px;min-height:46px;padding:0 13px;border-radius:9px;color:#fff8ef;font-size:14px;font-weight:600}
-    .mobile-panel a + a{border-top:1px solid #171717}
+    .mobile-panel a{position:relative;display:flex;align-items:center;gap:14px;min-height:46px;padding:0 13px;border-radius:9px;color:#fff8ef;font-size:14px;font-weight:600}
+    .mobile-panel a + a:before{content:"";position:absolute;top:0;left:50%;width:76%;height:1px;background:#171717;transform:translateX(-50%)}
     .mobile-panel a span{width:24px;color:rgba(255,248,239,.52);font-size:11px;letter-spacing:.12em}
     .mobile-panel a:hover{background:#684E39}
     .mobile-panel .mobile-cta{justify-content:center;margin-top:8px;background:#EEEAE2;color:#3F3025}

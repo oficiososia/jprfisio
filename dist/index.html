@@ -114,8 +114,15 @@
     details[open] summary:after{transform:rotate(45deg)}
     details p{padding-left:58px;max-width:650px;color:var(--muted);font-size:15px;margin:20px 0 0}
     .final-cta{background:var(--bone);padding:130px var(--pad)}
-    .final-cta .inner{display:grid;grid-template-columns:1.4fr .6fr;gap:50px;align-items:end}
+    .final-cta .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.82fr);gap:58px;align-items:stretch}
     .final-cta h2{font-size:clamp(42px,5.5vw,74px);max-width:850px;margin-bottom:16px}
+    .contact-details{margin:32px 0 0;color:var(--dark);font-size:16px}
+    .contact-label{display:block;margin-bottom:9px;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+    .contact-address{margin:0}
+    .contact-map{position:relative;min-height:390px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--cream)}
+    .contact-map iframe{display:block;width:100%;height:100%;min-height:390px;border:0;filter:saturate(.82) contrast(.96)}
+    .map-link{position:absolute;right:14px;bottom:14px;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:0 14px;
+      border-radius:9px;background:rgba(23,23,23,.84);color:#fff;font-size:13px;font-weight:600}
     footer{background:var(--ink);color:white;padding:90px var(--pad) 40px}
     .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:70px;padding-bottom:80px}
     footer .brand{font-size:17px} footer h4{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#999;margin:0 0 20px}
@@ -129,14 +136,14 @@
       .hero{grid-template-columns:1fr;padding-top:130px;gap:45px;min-height:auto}.hero-photo{width:min(100%,540px);height:auto;justify-self:start}.photo-note{display:none}
       section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
       .about-photo{margin-top:0;height:62vw}.about-logo{margin-top:28px}.about-copy .section-id{margin-bottom:35px}
-      .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
+      .final-cta .inner{grid-template-columns:1fr}.contact-map,.contact-map iframe{min-height:340px}.footer-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:600px){
       :root{--pad:22px}header{top:10px;width:calc(100% - 20px)}nav{height:60px;padding:0 10px 0 8px;gap:8px}.brand{gap:3px;font-size:clamp(8px,2.7vw,12px);overflow:hidden}.brand-logo{width:68px;height:53px}.links{display:none}.menu-toggle{width:42px;height:42px}.mobile-panel{right:0;width:calc(100vw - 20px)}
       .hero{padding-top:112px;padding-bottom:70px}.hero .eyebrow-group{display:grid;width:100%;margin:0 auto 28px;text-align:center;justify-items:center}.hero p{font-size:16px}.hero-photo{width:100%;max-width:430px;height:auto}
       section,.manifesto{padding-top:88px;padding-bottom:88px}.manifesto{text-align:center}.about-photo{height:115vw}
       .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:60px}.quote-meta{gap:20px}
-      summary{grid-template-columns:34px 1fr 18px;font-size:15px}details p{padding-left:44px}.final-cta{padding-top:90px;padding-bottom:90px}
+      summary{grid-template-columns:34px 1fr 18px;font-size:15px}details p{padding-left:44px}.final-cta{padding-top:90px;padding-bottom:90px}.contact-map,.contact-map iframe{min-height:310px}.map-link{right:10px;bottom:10px}
       .footer-grid{grid-template-columns:1fr;gap:45px}.legal{flex-direction:column}
     }
     @media(max-width:360px){.hero .eyebrow-group{justify-items:center}.hero .eyebrow-secondary{text-align:center;width:100%}}
@@ -257,8 +264,20 @@
 
 <section class="final-cta" id="contacto">
   <div class="wrap inner reveal">
-    <div><div class="section-id">Reserva</div><h2>Tu recuperación puede empezar hoy.</h2><p class="muted">Da el primer paso y reserva tu próxima sesión.</p></div>
-    <div class="actions"><a class="btn dark" href="https://wa.me/34670028629" target="_blank" rel="noopener">Reservar cita</a><a class="text-link" href="https://wa.me/34670028629" target="_blank" rel="noopener">Contactar por WhatsApp →</a></div>
+    <div>
+      <div class="section-id">Contacto</div>
+      <h2>Tu recuperación puede empezar hoy.</h2>
+      <p class="muted">Da el primer paso y reserva tu próxima sesión.</p>
+      <div class="contact-details">
+        <span class="contact-label">Dirección</span>
+        <p class="contact-address">Carrer Rei en Jaume I, 15<br>03330 Crevillent, Alicante</p>
+      </div>
+      <div class="actions"><a class="btn dark" href="https://wa.me/34670028629" target="_blank" rel="noopener">Reservar cita</a><a class="text-link" href="https://wa.me/34670028629" target="_blank" rel="noopener">Contactar por WhatsApp →</a></div>
+    </div>
+    <div class="contact-map">
+      <iframe title="Mapa de la consulta de Jorge Planelles Ricarte" src="https://www.google.com/maps?q=Carrer%20Rei%20en%20Jaume%20I%2C%2015%2C%2003330%20Crevillent%2C%20Alicante&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Carrer%20Rei%20en%20Jaume%20I%2015%2003330%20Crevillent%20Alicante" target="_blank" rel="noopener">Abrir mapa</a>
+    </div>
   </div>
 </section>
 </main>

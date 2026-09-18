@@ -107,6 +107,13 @@
     .movement-photo{height:min(68vw,760px)}
     .movement-copy{display:flex;justify-content:flex-end;padding-top:46px}
     .movement-copy p{font-size:clamp(28px,3.5vw,48px);line-height:1.2;letter-spacing:-.04em;max-width:780px}
+    #entrenamientos{background:var(--bone)}
+    .training-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:8vw;align-items:start}
+    .training-copy p{max-width:620px;color:var(--dark);font-size:18px}
+    .training-list{border-top:1px solid var(--line)}
+    .training-item{display:grid;grid-template-columns:55px 1fr;padding:28px 0;border-bottom:1px solid var(--line)}
+    .training-item b{font-size:12px}.training-item h3{font-size:25px;margin-bottom:7px}.training-item p{margin:0;color:var(--muted);font-size:15px}
+    .training-actions{margin-top:34px}
     .testimonials{background:var(--ink);color:white}
     .quote{max-width:1000px;margin:90px auto 0}
     .quote blockquote{font-size:clamp(31px,4.5vw,60px);line-height:1.17;letter-spacing:-.045em;margin:0;font-weight:400}
@@ -136,7 +143,7 @@
     @media(max-width:900px){
       :root{--pad:36px}.links a:not(.btn){display:none}.menu-toggle{display:inline-flex;position:relative;flex:0 0 auto}.mobile-panel{display:block}.links{gap:10px}nav{position:relative}
       .hero{grid-template-columns:1fr;padding-top:130px;gap:45px;min-height:101vh;min-height:101svh;min-height:101dvh;align-content:center}.hero-copy:before{width:min(1140px,168vw);opacity:.07}.hero-photo{width:min(100%,540px);height:auto;justify-self:start}.photo-note{display:none}
-      section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
+      section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.training-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
       .about-photo{margin-top:0;height:62vw}.about-logo-media{margin-top:28px}.about-copy .section-id{margin-bottom:35px}
       .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
     }
@@ -148,6 +155,7 @@
       .hero h1{margin-bottom:clamp(34px,7vh,62px)}.hero p{font-size:16px;margin-bottom:0}.hero .actions{margin-top:clamp(34px,7vh,64px)}.hero-photo{display:block;width:100%;max-width:430px;height:auto;margin:6px auto 0;justify-self:center}
       section,.manifesto{padding-top:88px;padding-bottom:88px}.manifesto{text-align:center}.about-photo{height:115vw}.about-logo-media{display:none}.about-logo-inline{display:block;width:min(330px,82%);margin:34px auto 38px}
       .about-copy h2{font-size:clamp(19px,6vw,32px);line-height:1.14;letter-spacing:0;max-width:100%}.about-heading-line{white-space:nowrap}
+      .training-copy p{font-size:16px}.training-item{grid-template-columns:42px 1fr}
       .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:60px}.quote-meta{gap:20px}
       summary{grid-template-columns:34px 1fr 18px;font-size:15px}details p{padding-left:44px}.final-cta{padding-top:90px;padding-bottom:90px}
       .footer-grid{grid-template-columns:1fr;gap:45px}.legal{flex-direction:column}
@@ -163,7 +171,7 @@
     <a class="brand" href="#inicio"><img class="brand-logo" src="blanco.PNG" alt=""><span>JORGE PLANELLES RICARTE<small>Fisioterapeuta</small></span></a>
     <div class="links">
       <a href="#inicio">Inicio</a><a href="#sobre-mi">Sobre mí</a>
-      <a href="#metodologia">Metodología</a><a href="#testimonios">Testimonios</a><a href="#preguntas">Preguntas</a>
+      <a href="#metodologia">Metodología</a><a href="#entrenamientos">Entrenamientos</a><a href="#testimonios">Testimonios</a><a href="#preguntas">Preguntas</a>
       <a class="btn dark" href="https://wa.me/34670028629" target="_blank" rel="noopener">Reservar cita</a>
     </div>
     <button class="menu-toggle" type="button" aria-label="Abrir menú de secciones" aria-expanded="false" aria-controls="mobile-navigation">
@@ -173,9 +181,10 @@
       <a href="#inicio"><span>01</span>Inicio</a>
       <a href="#sobre-mi"><span>02</span>Sobre mí</a>
       <a href="#metodologia"><span>03</span>Metodología</a>
-      <a href="#testimonios"><span>04</span>Testimonios</a>
-      <a href="#preguntas"><span>05</span>Preguntas</a>
-      <a href="#contacto"><span>06</span>Contacto</a>
+      <a href="#entrenamientos"><span>04</span>Entrenamientos</a>
+      <a href="#testimonios"><span>05</span>Testimonios</a>
+      <a href="#preguntas"><span>06</span>Preguntas</a>
+      <a href="#contacto"><span>07</span>Contacto</a>
       <a class="mobile-cta" href="https://wa.me/34670028629" target="_blank" rel="noopener">Reservar cita</a>
     </div>
   </nav>
@@ -245,9 +254,26 @@
   <div class="movement-copy reveal"><p>El objetivo no es solo encontrarte mejor.<br>Es volver a moverte con confianza.</p></div>
 </div>
 
+<section id="entrenamientos">
+  <div class="wrap training-grid">
+    <div class="training-copy reveal">
+      <div class="section-id">03 — Entrenamientos</div>
+      <h2>Entrenar con sentido, avanzar con seguridad.</h2>
+      <p>Entrenamientos adaptados a tu punto de partida, orientados a mejorar fuerza, movilidad, control y confianza. Un trabajo progresivo para recuperar capacidad y seguir avanzando fuera de la consulta.</p>
+      <div class="actions training-actions"><a class="btn dark" href="https://wa.me/34670028629" target="_blank" rel="noopener">Consultar entrenamientos</a></div>
+    </div>
+    <div class="training-list reveal">
+      <div class="training-item"><b>01</b><div><h3>Valoración inicial</h3><p>Antes de entrenar, se entiende qué necesitas, qué limita tu movimiento y desde dónde conviene empezar.</p></div></div>
+      <div class="training-item"><b>02</b><div><h3>Fuerza y movilidad</h3><p>Ejercicios seleccionados para mejorar capacidad física sin perder control ni calidad de movimiento.</p></div></div>
+      <div class="training-item"><b>03</b><div><h3>Readaptación</h3><p>Trabajo orientado a volver a tu actividad, deporte o rutina con una progresión clara y realista.</p></div></div>
+      <div class="training-item"><b>04</b><div><h3>Autonomía</h3><p>Herramientas sencillas para que sepas qué hacer, cómo avanzar y cómo cuidar tu cuerpo en el día a día.</p></div></div>
+    </div>
+  </div>
+</section>
+
 <section class="testimonials" id="testimonios">
   <div class="wrap">
-    <div class="section-id reveal">03 — Testimonios</div>
+    <div class="section-id reveal">04 — Testimonios</div>
     <div class="quote reveal">
       <blockquote>“[TESTIMONIO REAL DEL PACIENTE]”</blockquote>
       <div class="quote-meta"><span>[NOMBRE / INICIAL DEL PACIENTE] · Reseña verificada</span><span>01 / 04 &nbsp; ← &nbsp; →</span></div>
@@ -257,7 +283,7 @@
 
 <section id="preguntas">
   <div class="wrap faq-grid">
-    <div class="reveal"><div class="section-id">04 — Preguntas</div><h2>Antes de tu primera sesión.</h2></div>
+    <div class="reveal"><div class="section-id">05 — Preguntas</div><h2>Antes de tu primera sesión.</h2></div>
     <div class="reveal">
       <details><summary><span>01</span><span>¿Necesito algún diagnóstico antes de acudir?</span></summary><p>[RESPUESTA REAL]</p></details>
       <details><summary><span>02</span><span>¿Cuánto dura una sesión?</span></summary><p>[RESPUESTA REAL]</p></details>

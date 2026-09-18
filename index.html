@@ -67,6 +67,7 @@
     section{padding:150px 0}
     .about-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:9vw;align-items:start}
     .about-photo{height:570px;margin-top:72px}
+    .about-logo{display:block;width:100%;height:570px;margin-top:34px;object-fit:contain}
     .about-copy .section-id{margin-bottom:72px}
     .about-copy h2{max-width:690px}
     .about-copy .bio{max-width:640px;margin-top:36px;color:var(--dark)}
@@ -119,13 +120,13 @@
       :root{--pad:36px}.links a:not(.btn){display:none}.menu{display:block}.links{gap:10px}
       .hero{grid-template-columns:1fr;padding-top:130px;gap:45px;min-height:auto}.hero-photo{width:min(100%,540px);height:auto;justify-self:start}.photo-note{display:none}
       section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
-      .about-photo{margin-top:0;height:62vw}.about-copy .section-id{margin-bottom:35px}.service{grid-template-columns:55px 1fr}.service p{grid-column:2;opacity:1;transform:none}
+      .about-photo{margin-top:0;height:62vw}.about-logo{height:62vw;margin-top:28px}.about-copy .section-id{margin-bottom:35px}.service{grid-template-columns:55px 1fr}.service p{grid-column:2;opacity:1;transform:none}
       .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:600px){
       :root{--pad:22px}header{top:10px;width:calc(100% - 20px)}nav{height:60px;padding:0 10px 0 8px;gap:8px}.brand{gap:3px;font-size:clamp(8px,2.7vw,12px);overflow:hidden}.brand-logo{width:68px;height:53px}.links .btn{padding:0 11px;min-height:40px}.menu{display:none}
       .hero{padding-top:112px;padding-bottom:70px}.hero .eyebrow-group{display:grid;width:100%;margin:0 auto 28px;text-align:center;justify-items:center}.hero p{font-size:16px}.hero-photo{width:100%;max-width:430px;height:auto}
-      section,.manifesto{padding-top:88px;padding-bottom:88px}.manifesto{text-align:center}.about-photo{height:115vw}
+      section,.manifesto{padding-top:88px;padding-bottom:88px}.manifesto{text-align:center}.about-photo,.about-logo{height:115vw}
       .section-head{align-items:start;flex-direction:column;margin-bottom:45px}.service{grid-template-columns:38px 1fr;padding:23px 0}.service h3{font-size:25px}
       .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:60px}.quote-meta{gap:20px}
       summary{grid-template-columns:34px 1fr 18px;font-size:15px}details p{padding-left:44px}.final-cta{padding-top:90px;padding-bottom:90px}
@@ -171,7 +172,10 @@
 
 <section id="sobre-mi">
   <div class="wrap about-grid">
-    <div class="photo about-photo reveal"><div class="placeholder">Fotografía real — Retrato natural de Jorge dentro de la consulta. Luz lateral natural. Actitud trabajando.</div></div>
+    <div>
+      <div class="photo about-photo reveal"><div class="placeholder">Fotografía real — Retrato natural de Jorge dentro de la consulta. Luz lateral natural. Actitud trabajando.</div></div>
+      <img class="about-logo reveal" src="negro.PNG" alt="Logo de Jorge Planelles Ricarte">
+    </div>
     <div class="about-copy reveal">
       <div class="section-id">01 — Sobre mí</div>
       <h2>Fisioterapia centrada en la persona, no solo en la lesión.</h2>
@@ -188,7 +192,6 @@
         <p>Porque cada cuerpo es diferente. Y cada persona también.</p>
         <p>Mi forma de hacer fisioterapia parte de ahí.</p>
       </div>
-      <div class="signature">Escuchar. Entender. Tratar. Recuperar.</div>
     </div>
   </div>
 </section>

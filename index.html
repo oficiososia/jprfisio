@@ -86,7 +86,7 @@
     .about-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:9vw;align-items:start}
     .about-photo{width:100%;height:570px;margin-top:72px}
     .about-media{display:flex;flex-direction:column;align-items:stretch}
-    .about-logo{display:block;align-self:center;width:125%;max-width:100vw;height:auto;margin-top:34px;object-fit:contain}
+    .about-logo{display:block;width:min(360px,72%);max-width:100%;height:auto;margin:38px auto 42px;object-fit:contain}
     .about-copy .section-id{margin-bottom:72px}
     .about-copy h2{max-width:690px}
     .about-copy .bio{max-width:640px;margin-top:36px;color:var(--dark)}
@@ -132,7 +132,7 @@
       :root{--pad:36px}.links a:not(.btn){display:none}.menu-toggle{display:inline-flex;position:relative;flex:0 0 auto}.mobile-panel{display:block}.links{gap:10px}nav{position:relative}
       .hero{grid-template-columns:1fr;padding-top:130px;gap:45px;min-height:auto}.hero-photo{width:min(100%,540px);height:auto;justify-self:start}.photo-note{display:none}
       section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
-      .about-photo{margin-top:0;height:62vw}.about-logo{margin-top:28px}.about-copy .section-id{margin-bottom:35px}
+      .about-photo{margin-top:0;height:62vw}.about-logo{margin:34px auto 38px}.about-copy .section-id{margin-bottom:35px}
       .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:600px){
@@ -197,7 +197,6 @@
   <div class="wrap about-grid">
     <div class="about-media">
       <div class="photo about-photo reveal"><div class="placeholder">Fotografía real — Retrato natural de Jorge dentro de la consulta. Luz lateral natural. Actitud trabajando.</div></div>
-      <img class="about-logo reveal" src="negro.PNG" alt="Logo de Jorge Planelles Ricarte">
     </div>
     <div class="about-copy reveal">
       <div class="section-id">01 — Sobre mí</div>
@@ -207,6 +206,7 @@
         <p>Siempre he sentido la necesidad de cuidar y <strong>ayudar a los demás</strong>, y encontré en la fisioterapia una forma de convertir esa inquietud en mi profesión. Desde entonces, mi manera de pensar se ha mantenido fiel a una misma idea: <strong>para poder ayudar a una persona, primero necesito entenderla</strong></p>
         <p><strong>Entiendo el cuerpo humano como un todo</strong>, en el que diferentes sistemas y circunstancias interactúan entre sí. Por eso, cuando una persona llega a mi consulta, trato de comprender qué factores pueden estar contribuyendo a la aparición y al mantenimiento de su sintomatología</p>
         <p>Es por eso, que para mí, <strong>una buena valoración y un buen razonamiento clínico</strong> son la base para un buen tratamiento. Antes de decidir qué tratamiento realizar, necesito entender qué estoy viendo, qué puede estar influyendo y qué necesita realmente cada persona.</p>
+        <img class="about-logo" src="negro.PNG" alt="Logo de Jorge Planelles Ricarte">
         <p>Hay algo que considero especialmente importante: <strong>que el paciente entienda qué está ocurriendo.</strong></p>
         <p>Creo en una fisioterapia en la que la persona participa de forma activa en su recuperación. Por eso, además de trabajar sobre el problema, busco ofrecerle herramientas que pueda aplicar en su día a día y que le ayuden a <strong>recuperar su autonomía.</strong></p>
         <p>Porque recuperarse no significa únicamente que desaparezca el dolor. También significa <strong>recuperar la confianza en el propio cuerpo</strong>, volver a hacer aquello que nos importa y aprender a gestionar mejor el proceso</p>

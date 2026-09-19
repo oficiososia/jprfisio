@@ -42,7 +42,22 @@
     th{color:var(--ink);background:var(--cream)}
     .muted{color:var(--muted)}
     footer{padding:34px var(--pad);border-top:1px solid var(--line);color:var(--muted);font-size:13px}
-    @media(max-width:700px){header{align-items:flex-start;flex-direction:column}main{padding-top:46px}dl{grid-template-columns:1fr}dt{padding-bottom:0;border-bottom:0}dd{padding-top:4px}.toc{flex-direction:column}.toc a{justify-content:center}}
+    .cookie-banner{position:fixed;z-index:100;left:50%;bottom:20px;display:none;width:min(calc(100% - 32px),880px);max-height:calc(100vh - 40px);overflow:auto;padding:20px;transform:translateX(-50%);background:#fff8ef;color:#2b2722;border:1px solid rgba(92,68,48,.22);border-radius:18px;box-shadow:0 22px 70px rgba(23,23,23,.22)}
+    .cookie-banner.is-visible{display:block}
+    .cookie-banner h2{margin:0 0 8px;font-size:20px;line-height:1.2;letter-spacing:-.03em;font-weight:600}
+    .cookie-banner p{margin:0;color:#4d453d;font-size:14px;line-height:1.55}
+    .cookie-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .cookie-btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 15px;border:1px solid rgba(92,68,48,.42);border-radius:10px;background:transparent;color:#3f3025;font-size:13px;font-weight:700;cursor:pointer}
+    .cookie-btn.dark{background:#5C4430;color:#fff8ef;border-color:#5C4430}
+    .cookie-btn.light{background:#EEEAE2}
+    .cookie-panel{display:none;margin-top:16px;padding-top:15px;border-top:1px solid rgba(92,68,48,.18)}
+    .cookie-banner.is-configuring .cookie-panel{display:grid;gap:12px}
+    .cookie-option{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:13px;border:1px solid rgba(92,68,48,.14);border-radius:12px;background:rgba(238,234,226,.6)}
+    .cookie-option b{display:block;font-size:14px}
+    .cookie-option>span{display:block}
+    .cookie-option>span>span{display:block;margin-top:3px;color:#686058;font-size:12.5px;line-height:1.45}
+    .cookie-option input{width:18px;height:18px;accent-color:#5C4430}
+    @media(max-width:700px){header{align-items:flex-start;flex-direction:column}main{padding-top:46px}dl{grid-template-columns:1fr}dt{padding-bottom:0;border-bottom:0}dd{padding-top:4px}.toc{flex-direction:column}.toc a{justify-content:center}.cookie-banner{bottom:10px;width:calc(100% - 20px);padding:16px}.cookie-actions{display:grid}.cookie-btn{width:100%}}
   </style>
 </head>
 <body>
@@ -171,18 +186,18 @@
           <tr><td>Técnicas necesarias</td><td>El sitio puede requerir elementos técnicos básicos para su entrega, seguridad y visualización.</td><td>No requieren consentimiento cuando son estrictamente necesarias.</td></tr>
           <tr><td>Analíticas</td><td>No se utilizan cookies analíticas propias ni de terceros en esta versión.</td><td>No aplica.</td></tr>
           <tr><td>Publicidad comportamental</td><td>No se utilizan cookies publicitarias en esta versión.</td><td>No aplica.</td></tr>
-          <tr><td>Servicios externos</td><td>Los enlaces a WhatsApp o Google Maps pueden instalar cookies una vez se abandona este sitio y se accede a sus plataformas.</td><td>Depende de la política del proveedor externo.</td></tr>
+          <tr><td>Servicios externos</td><td>El mapa embebido de Google Maps se carga solo si se aceptan servicios externos. Los enlaces a WhatsApp o Google Maps pueden instalar cookies una vez se accede a sus plataformas.</td><td>Requieren consentimiento para la carga embebida.</td></tr>
         </tbody>
       </table>
 
       <h3>Gestión de cookies</h3>
-      <p>Al no utilizarse cookies analíticas o publicitarias en esta versión, no se muestra un panel de consentimiento. Si en el futuro se incorporan herramientas de analítica, mapas embebidos, vídeo, redes sociales o publicidad, esta política se actualizará y se habilitará el mecanismo de consentimiento que corresponda.</p>
+      <p>Al entrar en el sitio se muestra un panel que permite rechazar, configurar o aceptar las cookies y servicios externos. La persona usuaria puede cambiar su elección desde el enlace “Configurar cookies” del pie de página.</p>
 
       <h3>Cómo bloquear o eliminar cookies</h3>
       <p>La persona usuaria puede configurar su navegador para bloquear, eliminar o limitar cookies desde los ajustes de privacidad del propio navegador. La desactivación de cookies técnicas podría afectar al funcionamiento normal de algunos sitios web.</p>
 
       <h3>Última actualización</h3>
-      <p>18 de septiembre de 2026.</p>
+      <p>19 de septiembre de 2026.</p>
     </section>
 
     <section>
@@ -201,7 +216,75 @@
 </main>
 
 <footer>
-  © 2026 Jorge Planelles Ricarte · <a href="index.html">Volver a la página principal</a>
+  © 2026 Jorge Planelles Ricarte · <a href="index.html">Volver a la página principal</a> · <a href="#" data-cookie-config>Configurar cookies</a>
 </footer>
+<div class="cookie-banner" data-cookie-banner role="dialog" aria-modal="false" aria-labelledby="cookie-title">
+  <h2 id="cookie-title">Cookies</h2>
+  <p>Usamos cookies técnicas necesarias y, si lo aceptas, servicios externos como Google Maps para mostrar la ubicación de la consulta. Puedes aceptar, rechazar o configurar tus preferencias.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn light" type="button" data-cookie-reject>Rechazar</button>
+    <button class="cookie-btn" type="button" data-cookie-config>Configurar</button>
+    <button class="cookie-btn dark" type="button" data-cookie-accept>Aceptar</button>
+  </div>
+  <div class="cookie-panel" data-cookie-panel>
+    <label class="cookie-option">
+      <span><b>Necesarias</b><span>Imprescindibles para que la web funcione. Siempre activas.</span></span>
+      <input type="checkbox" checked disabled>
+    </label>
+    <label class="cookie-option">
+      <span><b>Servicios externos</b><span>Permiten cargar contenido de terceros, como el mapa de Google Maps.</span></span>
+      <input type="checkbox" data-cookie-external>
+    </label>
+    <button class="cookie-btn dark" type="button" data-cookie-save>Guardar configuración</button>
+  </div>
+</div>
+<script>
+  (()=>{
+    const storageKey='jorge_cookie_preferences';
+    const banner=document.querySelector('[data-cookie-banner]');
+    if(!banner) return;
+    const externalInput=banner.querySelector('[data-cookie-external]');
+    let sessionConsent=null;
+    const readConsent=()=>{
+      if(sessionConsent) return sessionConsent;
+      try{return JSON.parse(localStorage.getItem(storageKey));}catch(error){return null;}
+    };
+    const applyConsent=()=>{
+      const consent=readConsent();
+      const external=Boolean(consent?.external);
+      document.querySelectorAll('iframe[data-src]').forEach(frame=>{
+        if(external){
+          if(!frame.getAttribute('src')) frame.setAttribute('src',frame.dataset.src);
+        }else{
+          frame.removeAttribute('src');
+        }
+      });
+      document.querySelectorAll('[data-map-container]').forEach(map=>map.classList.toggle('map-enabled',external));
+      if(externalInput) externalInput.checked=external;
+    };
+    const hideBanner=()=>banner.classList.remove('is-visible','is-configuring');
+    const saveConsent=preferences=>{
+      sessionConsent={necessary:true,external:Boolean(preferences.external),updatedAt:new Date().toISOString()};
+      try{localStorage.setItem(storageKey,JSON.stringify(sessionConsent));}catch(error){}
+      applyConsent();
+      hideBanner();
+    };
+    const showBanner=(configure=false)=>{
+      applyConsent();
+      banner.classList.add('is-visible');
+      banner.classList.toggle('is-configuring',configure);
+      if(configure) externalInput?.focus();
+    };
+    document.querySelectorAll('[data-cookie-accept]').forEach(button=>button.addEventListener('click',()=>saveConsent({external:true})));
+    document.querySelectorAll('[data-cookie-reject]').forEach(button=>button.addEventListener('click',()=>saveConsent({external:false})));
+    document.querySelectorAll('[data-cookie-save]').forEach(button=>button.addEventListener('click',()=>saveConsent({external:externalInput?.checked})));
+    document.querySelectorAll('[data-cookie-config]').forEach(button=>button.addEventListener('click',event=>{
+      event.preventDefault();
+      showBanner(true);
+    }));
+    applyConsent();
+    if(!readConsent()) showBanner(false);
+  })();
+</script>
 </body>
 </html>

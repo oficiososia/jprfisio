@@ -162,9 +162,30 @@
     footer p,footer a{font-size:14px;color:#ccc}
     .footer-map{position:relative;height:190px;border:1px solid #444;border-radius:10px;overflow:hidden;background:#242424}
     .footer-map iframe{display:block;width:100%;height:100%;border:0;filter:saturate(.72) contrast(.9) grayscale(.18)}
-    .footer-map a{position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 12px;
+    .footer-map iframe:not([src]){display:none}
+    .footer-map>.map-link{position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 12px;
       border-radius:8px;background:rgba(23,23,23,.86);color:#fff;font-size:12px;font-weight:600}
+    .footer-map:not(.map-enabled)>.map-link{display:none}
+    .map-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:22px;text-align:center;background:#242424;color:#e8e1d7}
+    .footer-map.map-enabled .map-placeholder{display:none}
+    .map-placeholder p{margin:0;color:#ddd;font-size:13px;line-height:1.5}
+    .map-placeholder a{color:#fff;font-size:12px}
     .legal{border-top:1px solid #3a3a3a;padding-top:22px;display:flex;justify-content:space-between;gap:20px;font-size:11px;color:#777}
+    .cookie-banner{position:fixed;z-index:100;left:50%;bottom:20px;display:none;width:min(calc(100% - 32px),880px);max-height:calc(100vh - 40px);overflow:auto;padding:20px;transform:translateX(-50%);background:#fff8ef;color:#2b2722;border:1px solid rgba(92,68,48,.22);border-radius:18px;box-shadow:0 22px 70px rgba(23,23,23,.22)}
+    .cookie-banner.is-visible{display:block}
+    .cookie-banner h2{margin:0 0 8px;font-size:20px;line-height:1.2;letter-spacing:-.03em;font-weight:600}
+    .cookie-banner p{margin:0;color:#4d453d;font-size:14px;line-height:1.55}
+    .cookie-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .cookie-btn,.map-placeholder button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 15px;border:1px solid rgba(92,68,48,.42);border-radius:10px;background:transparent;color:#3f3025;font-size:13px;font-weight:700;cursor:pointer}
+    .cookie-btn.dark{background:#5C4430;color:#fff8ef;border-color:#5C4430}
+    .cookie-btn.light{background:#EEEAE2}
+    .cookie-panel{display:none;margin-top:16px;padding-top:15px;border-top:1px solid rgba(92,68,48,.18)}
+    .cookie-banner.is-configuring .cookie-panel{display:grid;gap:12px}
+    .cookie-option{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:13px;border:1px solid rgba(92,68,48,.14);border-radius:12px;background:rgba(238,234,226,.6)}
+    .cookie-option b{display:block;font-size:14px}
+    .cookie-option>span{display:block}
+    .cookie-option>span>span{display:block;margin-top:3px;color:#686058;font-size:12.5px;line-height:1.45}
+    .cookie-option input{width:18px;height:18px;accent-color:#5C4430}
     .reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
     .reveal.on{opacity:1;transform:none}
     @media(max-width:900px){
@@ -190,7 +211,7 @@
       #metodologia h2{font-size:clamp(22px,8.2vw,40px);line-height:1.08}
       .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:60px}.quote-meta{gap:20px}
       summary{grid-template-columns:34px 1fr 18px;font-size:15px}details p{padding-left:44px}.final-cta{padding-top:90px;padding-bottom:90px}
-      .footer-grid{grid-template-columns:1fr;gap:45px}.legal{flex-direction:column}
+      .footer-grid{grid-template-columns:1fr;gap:45px}.legal{flex-direction:column}.cookie-banner{bottom:10px;width:calc(100% - 20px);padding:16px}.cookie-actions{display:grid}.cookie-btn,.map-placeholder button{width:100%}.map-placeholder{padding:16px}
     }
     @media(max-width:360px){.hero .eyebrow-group{justify-items:center}.hero .eyebrow-secondary{text-align:center;width:100%}}
     @media(max-width:340px){nav{padding-left:6px;gap:6px}.brand{gap:2px;font-size:7.6px}.brand-logo{width:58px;height:48px}}
@@ -360,10 +381,31 @@
   <div class="footer-grid">
     <div><div class="brand">JORGE PLANELLES RICARTE<small>Fisioterapeuta</small></div></div>
     <div><h4>Contacto</h4><p><a href="tel:+34670028629">670 02 86 29</a></p><p>Carrer Rei en Jaume I, 15<br>03330 Crevillent, Alicante<br>Provincia: Alicante</p><p>Lunes a viernes · 8:00–21:00<br>Sábado · 8:00–13:00<br>Domingo · Cerrado</p></div>
-    <div><h4>Ubicación</h4><div class="footer-map"><iframe title="Mapa de la consulta de Jorge Planelles Ricarte" src="https://www.google.com/maps?q=Carrer%20Rei%20en%20Jaume%20I%2C%2015%2C%2003330%20Crevillent%2C%20Alicante&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><a href="https://www.google.com/maps/search/?api=1&query=Carrer%20Rei%20en%20Jaume%20I%2015%2003330%20Crevillent%20Alicante" target="_blank" rel="noopener">Abrir mapa</a></div></div>
+    <div><h4>Ubicación</h4><div class="footer-map" data-map-container><div class="map-placeholder"><p>El mapa de Google Maps se carga al aceptar los servicios externos.</p><button type="button" data-cookie-config>Configurar cookies</button><a href="https://www.google.com/maps/search/?api=1&query=Carrer%20Rei%20en%20Jaume%20I%2015%2003330%20Crevillent%20Alicante" target="_blank" rel="noopener">Abrir en Google Maps</a></div><iframe title="Mapa de la consulta de Jorge Planelles Ricarte" data-src="https://www.google.com/maps?q=Carrer%20Rei%20en%20Jaume%20I%2C%2015%2C%2003330%20Crevillent%2C%20Alicante&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Carrer%20Rei%20en%20Jaume%20I%2015%2003330%20Crevillent%20Alicante" target="_blank" rel="noopener">Abrir mapa</a></div></div>
   </div>
-  <div class="legal"><span>© 2026 Jorge Planelles Ricarte</span><span><a href="legal.html#aviso-legal">Aviso legal</a> &nbsp;&nbsp; <a href="legal.html#privacidad">Privacidad</a> &nbsp;&nbsp; <a href="legal.html#cookies">Cookies</a></span></div>
+  <div class="legal"><span>© 2026 Jorge Planelles Ricarte</span><span><a href="legal.html#aviso-legal">Aviso legal</a> &nbsp;&nbsp; <a href="legal.html#privacidad">Privacidad</a> &nbsp;&nbsp; <a href="legal.html#cookies">Cookies</a> &nbsp;&nbsp; <a href="#" data-cookie-config>Configurar cookies</a></span></div>
 </footer>
+
+<div class="cookie-banner" data-cookie-banner role="dialog" aria-modal="false" aria-labelledby="cookie-title">
+  <h2 id="cookie-title">Cookies</h2>
+  <p>Usamos cookies técnicas necesarias y, si lo aceptas, servicios externos como Google Maps para mostrar la ubicación de la consulta. Puedes aceptar, rechazar o configurar tus preferencias.</p>
+  <div class="cookie-actions">
+    <button class="cookie-btn light" type="button" data-cookie-reject>Rechazar</button>
+    <button class="cookie-btn" type="button" data-cookie-config>Configurar</button>
+    <button class="cookie-btn dark" type="button" data-cookie-accept>Aceptar</button>
+  </div>
+  <div class="cookie-panel" data-cookie-panel>
+    <label class="cookie-option">
+      <span><b>Necesarias</b><span>Imprescindibles para que la web funcione. Siempre activas.</span></span>
+      <input type="checkbox" checked disabled>
+    </label>
+    <label class="cookie-option">
+      <span><b>Servicios externos</b><span>Permiten cargar contenido de terceros, como el mapa de Google Maps.</span></span>
+      <input type="checkbox" data-cookie-external>
+    </label>
+    <button class="cookie-btn dark" type="button" data-cookie-save>Guardar configuración</button>
+  </div>
+</div>
 
 <script>
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.12});
@@ -387,6 +429,52 @@
   document.addEventListener('keydown',event=>{
     if(event.key==='Escape') closeMenu();
   });
+  (()=>{
+    const storageKey='jorge_cookie_preferences';
+    const banner=document.querySelector('[data-cookie-banner]');
+    if(!banner) return;
+    const externalInput=banner.querySelector('[data-cookie-external]');
+    let sessionConsent=null;
+    const readConsent=()=>{
+      if(sessionConsent) return sessionConsent;
+      try{return JSON.parse(localStorage.getItem(storageKey));}catch(error){return null;}
+    };
+    const applyConsent=()=>{
+      const consent=readConsent();
+      const external=Boolean(consent?.external);
+      document.querySelectorAll('iframe[data-src]').forEach(frame=>{
+        if(external){
+          if(!frame.getAttribute('src')) frame.setAttribute('src',frame.dataset.src);
+        }else{
+          frame.removeAttribute('src');
+        }
+      });
+      document.querySelectorAll('[data-map-container]').forEach(map=>map.classList.toggle('map-enabled',external));
+      if(externalInput) externalInput.checked=external;
+    };
+    const hideBanner=()=>banner.classList.remove('is-visible','is-configuring');
+    const saveConsent=preferences=>{
+      sessionConsent={necessary:true,external:Boolean(preferences.external),updatedAt:new Date().toISOString()};
+      try{localStorage.setItem(storageKey,JSON.stringify(sessionConsent));}catch(error){}
+      applyConsent();
+      hideBanner();
+    };
+    const showBanner=(configure=false)=>{
+      applyConsent();
+      banner.classList.add('is-visible');
+      banner.classList.toggle('is-configuring',configure);
+      if(configure) externalInput?.focus();
+    };
+    document.querySelectorAll('[data-cookie-accept]').forEach(button=>button.addEventListener('click',()=>saveConsent({external:true})));
+    document.querySelectorAll('[data-cookie-reject]').forEach(button=>button.addEventListener('click',()=>saveConsent({external:false})));
+    document.querySelectorAll('[data-cookie-save]').forEach(button=>button.addEventListener('click',()=>saveConsent({external:externalInput?.checked})));
+    document.querySelectorAll('[data-cookie-config]').forEach(button=>button.addEventListener('click',event=>{
+      event.preventDefault();
+      showBanner(true);
+    }));
+    applyConsent();
+    if(!readConsent()) showBanner(false);
+  })();
 </script>
 </body>
 </html>

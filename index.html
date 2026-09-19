@@ -123,7 +123,9 @@
     .personality-note{justify-self:end;max-width:280px;font-family:"Segoe Script","Brush Script MT",cursive;font-size:24px;line-height:1.15;color:#3f3b35;transform:rotate(-8deg)}
     .personality-note:after{content:"";display:block;width:48px;height:1px;background:#6e675d;margin:18px auto 0}
     #metodologia{background:var(--bone)}
-    .method-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:9vw}
+    .method-grid{display:grid;grid-template-columns:minmax(330px,.95fr) minmax(0,1.05fr);gap:9vw}
+    #metodologia h2{font-size:clamp(34px,3.4vw,48px)}
+    .method-title-line{display:block;white-space:nowrap}
     .steps{border-top:1px solid var(--line)}
     .step{display:grid;grid-template-columns:55px 1fr;padding:28px 0;border-bottom:1px solid var(--line)}
     .step b{font-size:12px}.step h3{font-size:25px;margin-bottom:7px}.step p{margin:0;color:var(--muted);font-size:15px}
@@ -184,6 +186,7 @@
       .about-copy .section-id{margin-bottom:24px}.about-copy h2{font-size:clamp(30px,10vw,42px);line-height:1.08;letter-spacing:-.04em;max-width:100%}.about-heading-line{white-space:normal}.about-copy .bio p{font-size:15px}
       .about-quote{padding:24px 12px}.about-copy .bio .about-quote p{font-size:clamp(12px,4.75vw,24px);line-height:1.25;letter-spacing:-.035em}.about-principles{grid-template-columns:1fr;gap:34px;padding:52px 0 62px}.about-personality{padding:58px 0 66px}.about-personality-inner{grid-template-columns:1fr;gap:36px}.about-personality h3{font-size:clamp(32px,9vw,43px)}.about-personality p{font-size:16px}.personality-note{justify-self:start;transform:none;font-size:21px}
       .training-copy p{font-size:16px}.training-item{grid-template-columns:42px 1fr}
+      #metodologia h2{font-size:clamp(22px,8.2vw,40px);line-height:1.08}
       .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:60px}.quote-meta{gap:20px}
       summary{grid-template-columns:34px 1fr 18px;font-size:15px}details p{padding-left:44px}.final-cta{padding-top:90px;padding-bottom:90px}
       .footer-grid{grid-template-columns:1fr;gap:45px}.legal{flex-direction:column}
@@ -295,7 +298,7 @@
 
 <section id="metodologia">
   <div class="wrap method-grid">
-    <div class="reveal"><div class="section-id">02 — Metodología</div><h2>Un proceso pensado alrededor de ti.</h2></div>
+    <div class="reveal"><div class="section-id">02 — Metodología</div><h2><span class="method-title-line">Un proceso pensado</span><span class="method-title-line">alrededor de ti.</span></h2></div>
     <div class="steps reveal">
       <div class="step"><b>01</b><div><h3>Escuchar</h3><p>Entender qué ocurre y cómo está afectándote.</p></div></div>
       <div class="step"><b>02</b><div><h3>Valorar</h3><p>Analizar movimiento, síntomas y contexto.</p></div></div>

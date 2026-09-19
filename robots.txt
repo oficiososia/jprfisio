@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jorge-planelles-ricarte-fisio.gearxchange2025.chatgpt.site/sitemap.xml

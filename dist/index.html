@@ -129,8 +129,8 @@
     .muted{color:var(--muted)}
     .btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 21px;border:1px solid var(--ink);white-space:nowrap;
       border-radius:10px;font-size:14px;font-weight:600;transition:.25s ease;cursor:pointer;background:transparent}
-    .btn.dark{background:var(--ink);color:white}
-    .btn:hover{transform:translateY(-2px)} .btn.dark:hover{background:#333}
+    .btn.dark{background:rgba(92,68,48,.74);color:#fff8ef;border-color:rgba(92,68,48,.74)}
+    .btn:hover{transform:translateY(-2px)} .btn.dark:hover{background:rgba(92,68,48,.88)}
     header{position:fixed;z-index:50;top:18px;left:50%;transform:translateX(-50%);width:min(calc(100% - 36px),1380px);
       color:#fff8ef;background:rgba(92,68,48,.74);backdrop-filter:blur(12px);border:1px solid rgba(255,248,239,.18);border-radius:13px}
     nav{height:68px;padding:0 18px 0 14px;display:flex;align-items:center;justify-content:space-between;gap:28px}
@@ -170,8 +170,6 @@
     .hero .eyebrow-group{margin-bottom:34px}
     .hero p{max-width:560px;color:var(--dark);font-size:18px}
     .actions{display:flex;gap:13px;margin-top:34px;align-items:center;flex-wrap:wrap}
-    .hero .actions .btn.dark{background:rgba(92,68,48,.74);color:#fff8ef;border-color:rgba(92,68,48,.74)}
-    .hero .actions .btn.dark:hover{background:rgba(92,68,48,.88)}
     .text-link{font-size:14px;border-bottom:1px solid var(--line);padding:10px 2px}
     .photo{position:relative;background:var(--cream);overflow:hidden;border-radius:var(--radius)}
     .hero-photo{width:min(40vw,620px);height:auto;justify-self:center;align-self:center}
@@ -200,15 +198,16 @@
     .about-copy .bio:before{content:"";display:block;width:66px;height:2px;background:var(--ink);margin-bottom:24px}
     .about-copy .bio p{margin-bottom:19px;font-size:16px;line-height:1.72}
     .about-copy .bio p:last-child{margin-bottom:0}
-    .about-quote{margin-top:32px;padding:34px 42px 28px;background:var(--cream);border:1px solid rgba(216,212,204,.7);border-radius:18px}
-    .about-copy .bio .about-quote p{margin:0;text-align:center;font-family:Georgia,"Times New Roman",serif;font-size:clamp(24px,2.35vw,38px);line-height:1.22;letter-spacing:-.03em;font-style:italic;color:#282522}
+    .about-quote{container-type:inline-size;margin-top:32px;padding:34px 42px 28px;background:var(--cream);border:1px solid rgba(216,212,204,.7);border-radius:18px}
+    .about-copy .bio .about-quote p{margin:0;text-align:center;font-family:Georgia,"Times New Roman",serif;font-size:min(38px,6.6cqi);line-height:1.22;letter-spacing:-.03em;font-style:italic;color:#282522}
     .quote-line{display:block;white-space:nowrap}
     .about-quote:after{content:"";display:block;width:42px;height:1px;background:#9d968b;margin:22px auto 0}
     .about-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(42px,7vw,120px);padding:70px 0 88px}
-    .about-icon{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#EAE6DE;color:#272523;margin-bottom:25px}
+    .about-principle{text-align:center}
+    .about-icon{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#EAE6DE;color:#272523;margin:0 auto 25px}
     .about-icon svg{width:36px;height:36px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
-    .about-principle h3{font-size:23px;line-height:1.25;font-weight:500;letter-spacing:-.03em;margin:0 0 18px;max-width:360px}
-    .about-principle p{margin:0;max-width:370px;color:var(--muted);font-size:15px;line-height:1.72}
+    .about-principle h3{font-size:23px;line-height:1.25;font-weight:500;letter-spacing:-.03em;margin:0 auto 18px;max-width:360px}
+    .about-principle p{margin:0 auto;max-width:370px;color:var(--muted);font-size:15px;line-height:1.72}
     .about-personality{position:relative;overflow:hidden;background:#EDE9E1;padding:70px 0 84px}
     .about-personality:before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,.34),rgba(255,255,255,0) 58%);pointer-events:none}
     .about-personality-inner{position:relative;display:grid;grid-template-columns:1fr;gap:0;align-items:center;justify-items:center;text-align:center}
@@ -291,20 +290,20 @@
       .hero{grid-template-columns:1fr;padding-top:130px;gap:45px;min-height:101vh;min-height:101svh;min-height:101dvh;align-content:center}.hero-copy:before{width:min(1140px,168vw);opacity:.07}.hero-photo{width:min(100%,540px);height:auto;justify-self:start}.photo-note{display:none}
       section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.training-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
       .about-grid{grid-template-columns:minmax(250px,.92fr) minmax(0,1.08fr);gap:34px}.about-photo{height:620px}.about-copy{padding-top:0}.about-copy .section-id{margin-bottom:28px}
-      .about-copy h2{font-size:clamp(35px,5vw,47px)}.about-copy .bio{margin-top:22px}.about-copy .bio p{font-size:14.5px;line-height:1.62}.about-quote{padding:26px 18px}.about-copy .bio .about-quote p{font-size:clamp(22px,3.05vw,28px)}
+      .about-copy h2{font-size:clamp(35px,5vw,47px)}.about-copy .bio{margin-top:22px}.about-copy .bio p{font-size:14.5px;line-height:1.62}.about-quote{padding:26px 18px}
       .about-principles{gap:30px;padding:58px 0 76px}.about-icon{width:64px;height:64px}.about-principle h3{font-size:20px}.about-principle p{font-size:14px}
       .about-personality{padding:62px 0 72px}.about-personality-inner{grid-template-columns:1fr;gap:0}.personality-note{font-size:22px}
       .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:600px){
       :root{--pad:22px}header{top:10px;width:calc(100% - 20px)}nav{height:60px;padding:0 10px 0 8px;gap:8px}.brand{gap:3px;font-size:clamp(8px,2.7vw,12px);overflow:hidden}.brand-logo{width:68px;height:53px}.links{display:none}.menu-toggle{width:42px;height:42px}.mobile-panel{right:0;width:calc(100vw - 20px)}
-      .hero{min-height:101vh;min-height:101svh;min-height:101dvh;padding-top:96px;padding-bottom:34px;align-content:center;gap:18px}
-      .hero-copy{width:100%;min-height:calc(101vh - 130px);min-height:calc(101svh - 130px);min-height:calc(101dvh - 130px);display:flex;flex-direction:column;justify-content:center}
+      .hero{min-height:101vh;min-height:101svh;min-height:101dvh;padding-top:96px;padding-bottom:34px;align-content:start;gap:clamp(40px,8vh,72px)}
+      .hero-copy{width:100%;display:flex;flex-direction:column;justify-content:flex-start;padding-top:14px}
       .hero-copy:before{top:46%;width:118vw;opacity:.052}.hero .eyebrow-group{display:grid;width:100%;margin:0 auto clamp(34px,7vh,64px);text-align:center;justify-items:center}
       .hero h1{margin-bottom:clamp(34px,7vh,62px)}.hero p{font-size:16px;margin-bottom:0}.hero .actions{margin-top:clamp(34px,7vh,64px)}.hero-photo{display:block;width:100%;max-width:430px;height:auto;margin:6px auto 0;justify-self:center}
       section,.manifesto{padding-top:88px;padding-bottom:88px}.manifesto{text-align:center}.about-grid{grid-template-columns:1fr;gap:18px}.about-media{display:none}.about-copy{padding-top:0}.about-copy .about-photo-mobile{display:block;width:min(100%,430px);height:min(116vw,520px);margin:26px auto 0;border-radius:18px}.about-copy .about-photo-mobile img{object-position:27% 50%}.about-photo-caption{left:22px;bottom:22px;font-size:10px}
       .about-copy .section-id{margin-bottom:24px}.about-copy h2{font-size:clamp(30px,10vw,42px);line-height:1.08;letter-spacing:-.04em;max-width:100%}.about-heading-line{white-space:normal}.about-copy .bio p{font-size:15px}
-      .about-quote{width:min(100%,430px);margin:30px auto 0;padding:24px 14px}.about-copy .bio .about-quote p{font-size:clamp(12px,4.75vw,24px);line-height:1.25;letter-spacing:-.035em}.about-principles{grid-template-columns:1fr;gap:34px;padding:52px 0 62px}.about-personality{padding:58px 0 66px}.about-personality-inner{grid-template-columns:1fr;gap:36px}.about-personality h3{font-size:clamp(32px,9vw,43px)}.about-personality p{font-size:16px}.personality-note{justify-self:start;transform:none;font-size:21px}
+      .about-quote{width:min(100%,430px);margin:30px auto 0;padding:24px 14px}.about-copy .bio .about-quote p{line-height:1.25;letter-spacing:-.035em}.about-principles{grid-template-columns:1fr;gap:34px;padding:52px 0 62px}.about-personality{padding:58px 0 66px}.about-personality-inner{grid-template-columns:1fr;gap:36px}.about-personality h3{font-size:clamp(32px,9vw,43px)}.about-personality p{font-size:16px}.personality-note{justify-self:start;transform:none;font-size:21px}
       .training-copy p{font-size:16px}.training-item{grid-template-columns:42px 1fr}
       #metodologia h2{font-size:clamp(22px,8.2vw,40px);line-height:1.08}
       .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:60px}.quote-meta{gap:20px}
@@ -397,21 +396,21 @@
   <div class="wrap about-principles reveal">
     <article class="about-principle">
       <div class="about-icon" aria-hidden="true">
-        <svg viewBox="0 0 48 48"><circle cx="24" cy="16" r="8"></circle><path d="M10 40c2.4-8 7-12 14-12s11.6 4 14 12"></path></svg>
+        <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="5"></circle><circle cx="24" cy="6.5" r="3.5"></circle><circle cx="40.5" cy="18.5" r="3.5"></circle><circle cx="34.5" cy="39" r="3.5"></circle><circle cx="13.5" cy="39" r="3.5"></circle><circle cx="7.5" cy="18.5" r="3.5"></circle><path d="M24 10v9M37.2 19.6l-8.4 2.9M32.4 36.2l-5.4-7.6M15.6 36.2l5.4-7.6M10.8 19.6l8.4 2.9"></path></svg>
       </div>
       <h3>Entender el cuerpo como un todo</h3>
       <p>Entiendo el cuerpo como un todo, en el que diferentes sistemas y circunstancias interactúan entre sí. Por eso, una buena valoración y un buen razonamiento clínico son la base para un buen tratamiento.</p>
     </article>
     <article class="about-principle">
       <div class="about-icon" aria-hidden="true">
-        <svg viewBox="0 0 48 48"><path d="M18 32c-7 0-12-4.4-12-10s5-10 12-10 12 4.4 12 10-5 10-12 10Z"></path><path d="M26 31c2.1 3.1 5.7 5 10 5 1.7 0 3.3-.3 4.8-.9L42 40l-5.2-2.8"></path><path d="M12 30l-4 4 1.2-5"></path></svg>
+        <svg viewBox="0 0 48 48"><path d="M18 31c-3.2-2.6-5-6.2-5-10.2a11 11 0 0 1 22 0c0 4-1.8 7.6-5 10.2V34H18v-3Z"></path><path d="M19 38.5h10"></path><path d="M21 42.5h6"></path><path d="M24 34v-8l-3-3"></path><path d="M24 26l3-3"></path></svg>
       </div>
       <h3>Que comprendas lo que está ocurriendo</h3>
       <p>Creo que es fundamental que la persona entienda qué está ocurriendo. Solo así puede tomar un papel activo en su recuperación y sentirse segura durante todo el proceso.</p>
     </article>
     <article class="about-principle">
       <div class="about-icon" aria-hidden="true">
-        <svg viewBox="0 0 48 48"><path d="M12 36h5V24h-5v12Z"></path><path d="M22 36h5V16h-5v20Z"></path><path d="M32 36h5V8h-5v28Z"></path><path d="M8 40h32"></path></svg>
+        <svg viewBox="0 0 48 48"><circle cx="30" cy="8" r="4"></circle><path d="M28 14l-7 14"></path><path d="M27 17l-8 2-5 6"></path><path d="M27 17l6 6 6-2"></path><path d="M21 28l9 5-2 10"></path><path d="M21 28l-5 8H7"></path></svg>
       </div>
       <h3>Recuperar mucho más que la ausencia de dolor</h3>
       <p>Recuperarse no significa únicamente que desaparezca el dolor. También significa recuperar la confianza en el propio cuerpo, volver a hacer aquello que nos importa y aprender a gestionar mejor el proceso.</p>

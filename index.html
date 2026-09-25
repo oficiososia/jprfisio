@@ -203,12 +203,12 @@
     .about-copy .bio .about-quote p{margin:0;text-align:center;font-family:Georgia,"Times New Roman",serif;font-size:min(38px,6.6cqi);line-height:1.22;letter-spacing:-.03em;font-style:italic;color:#282522}
     .quote-line{display:block;white-space:nowrap}
     .about-quote:after{content:"";display:block;width:42px;height:1px;background:#9d968b;margin:22px auto 0}
-    .about-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(42px,7vw,120px);padding:70px 0 88px}
-    .about-principle{text-align:center}
-    .about-icon{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#EAE6DE;color:#272523;margin:0 auto 25px}
+    .about-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(32px,3.5vw,64px);padding:70px 0 88px}
+    .about-principle{display:grid;grid-template-columns:auto 1fr;column-gap:22px;align-items:start;align-content:start;text-align:left}
+    .about-icon{grid-row:1 / span 2;width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#EAE6DE;color:#272523;margin:0}
     .about-icon svg{width:36px;height:36px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
-    .about-principle h3{font-size:23px;line-height:1.25;font-weight:500;letter-spacing:-.03em;margin:0 auto 18px;max-width:360px}
-    .about-principle p{margin:0 auto;max-width:370px;color:var(--muted);font-size:15px;line-height:1.72}
+    .about-principle h3{grid-column:2;font-size:23px;line-height:1.25;font-weight:500;letter-spacing:-.03em;margin:0 0 12px;max-width:360px}
+    .about-principle p{grid-column:2;margin:0;max-width:370px;color:var(--muted);font-size:15px;line-height:1.72}
     .about-personality{position:relative;overflow:hidden;background:#EDE9E1;padding:70px 0 84px}
     .about-personality:before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,.34),rgba(255,255,255,0) 58%);pointer-events:none}
     .about-personality-inner{position:relative;display:grid;grid-template-columns:1fr;gap:0;align-items:center;justify-items:center;text-align:center}
@@ -299,7 +299,7 @@
       section,.manifesto{padding-top:110px;padding-bottom:110px}.about-grid,.method-grid,.training-grid,.faq-grid{grid-template-columns:1fr;gap:55px}
       .about-grid{grid-template-columns:minmax(250px,.92fr) minmax(0,1.08fr);gap:34px}.about-photo{height:620px}.about-copy{padding-top:0}.about-copy .section-id{margin-bottom:28px}
       .about-copy h2{font-size:clamp(35px,5vw,47px)}.about-copy .bio{margin-top:22px}.about-copy .bio p{font-size:14.5px;line-height:1.62}.about-quote{padding:26px 18px}
-      .about-principles{gap:30px;padding:58px 0 76px}.about-icon{width:64px;height:64px}.about-principle h3{font-size:20px}.about-principle p{font-size:14px}
+      .about-principles{grid-template-columns:1fr;gap:40px;padding:58px 0 76px}.about-icon{width:64px;height:64px}.about-principle h3{font-size:20px}.about-principle p{font-size:14px}
       .about-personality{padding:62px 0 72px}.about-personality-inner{grid-template-columns:1fr;gap:0}.personality-note{font-size:22px}
       .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
     }

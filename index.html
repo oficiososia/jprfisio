@@ -568,6 +568,17 @@
       authorEl.textContent=`${item.author} · Reseña verificada`;
       countEl.textContent=`${pad(index+1)} / ${pad(testimonials.length)}`;
     };
+    const syncHeight=()=>{
+      const current=quoteEl.textContent;
+      quoteEl.style.minHeight='';
+      let max=0;
+      testimonials.forEach(item=>{
+        quoteEl.textContent=`"${item.quote}"`;
+        max=Math.max(max,quoteEl.getBoundingClientRect().height);
+      });
+      quoteEl.textContent=current;
+      quoteEl.style.minHeight=`${Math.ceil(max)}px`;
+    };
     slider.querySelector('[data-testimonial-prev]')?.addEventListener('click',()=>{
       index=(index-1+testimonials.length)%testimonials.length;
       render();
@@ -576,6 +587,13 @@
       index=(index+1)%testimonials.length;
       render();
     });
+    syncHeight();
+    let resizeTimer;
+    window.addEventListener('resize',()=>{
+      clearTimeout(resizeTimer);
+      resizeTimer=setTimeout(syncHeight,150);
+    });
+    document.fonts?.ready?.then(syncHeight);
   })();
   document.addEventListener('click',event=>{
     if(!document.body.classList.contains('nav-open')) return;

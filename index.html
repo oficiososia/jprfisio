@@ -241,7 +241,10 @@
     .testimonials{background:var(--ink);color:white}
     .quote{max-width:1000px;margin:90px auto 0}
     .quote blockquote{font-size:clamp(31px,4.5vw,60px);line-height:1.17;letter-spacing:-.045em;margin:0;font-weight:400}
-    .quote-meta{display:flex;justify-content:space-between;border-top:1px solid #444;margin-top:60px;padding-top:20px;font-size:12px;color:#aaa}
+    .quote-meta{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #444;margin-top:60px;padding-top:20px;font-size:12px;color:#aaa}
+    .quote-nav{display:inline-flex;align-items:center;gap:12px}
+    .quote-arrow{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid #444;border-radius:50%;background:none;color:#aaa;font-size:13px;line-height:1;cursor:pointer;transition:.2s ease}
+    .quote-arrow:hover{border-color:#aaa;color:#fff}
     .faq-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:8vw}
     details{border-top:1px solid var(--line);padding:23px 0}
     details:last-child{border-bottom:1px solid var(--line)}
@@ -455,12 +458,20 @@
   </div>
 </section>
 
-<section class="testimonials" id="testimonios">
-  <div class="wrap">
-    <div class="section-id reveal">04 — Testimonios</div>
-    <div class="quote reveal">
-      <blockquote>“[TESTIMONIO REAL DEL PACIENTE]”</blockquote>
-      <div class="quote-meta"><span>[NOMBRE / INICIAL DEL PACIENTE] · Reseña verificada</span><span>01 / 04 &nbsp; ← &nbsp; →</span></div>
+<section class=”testimonials” id=”testimonios”>
+  <div class=”wrap”>
+    <div class=”section-id reveal”>04 — Testimonios</div>
+    <!-- Testimonios de ejemplo (ficticios), pendientes de sustituir por reseñas reales de pacientes -->
+    <div class=”quote reveal” data-testimonial-slider>
+      <blockquote data-testimonial-quote>“Llevaba meses arrastrando un dolor de espalda que ya daba por normal. Jorge me ayudó a entender qué lo provocaba y hoy me muevo con mucha más confianza.”</blockquote>
+      <div class=”quote-meta”>
+        <span data-testimonial-author>María G. · Reseña verificada</span>
+        <span class=”quote-nav”>
+          <span data-testimonial-count>01 / 04</span>
+          <button type=”button” class=”quote-arrow” data-testimonial-prev aria-label=”Testimonio anterior”>←</button>
+          <button type=”button” class=”quote-arrow” data-testimonial-next aria-label=”Testimonio siguiente”>→</button>
+        </span>
+      </div>
     </div>
   </div>
 </section>
@@ -537,6 +548,35 @@
     menuToggle.setAttribute('aria-expanded',String(isOpen));
   });
   mobilePanel?.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
+  (()=>{
+    const testimonials=[
+      {quote:'Llevaba meses arrastrando un dolor de espalda que ya daba por normal. Jorge me ayudó a entender qué lo provocaba y hoy me muevo con mucha más confianza.',author:'María G.'},
+      {quote:'Después de la operación de rodilla tenía mucho miedo a volver a lesionarme. El seguimiento cercano y el trabajo progresivo me devolvieron la seguridad.',author:'Antonio S.'},
+      {quote:'Lo que más valoro es que no se queda en tratar el síntoma: te explica el porqué y te hace parte activa de tu propia recuperación.',author:'Carmen L.'},
+      {quote:'Empecé los entrenamientos adaptados sin apenas movilidad en el hombro. Ahora entreno con normalidad y sin dolor.',author:'Rubén M.'}
+    ];
+    const slider=document.querySelector('[data-testimonial-slider]');
+    if(!slider) return;
+    const quoteEl=slider.querySelector('[data-testimonial-quote]');
+    const authorEl=slider.querySelector('[data-testimonial-author]');
+    const countEl=slider.querySelector('[data-testimonial-count]');
+    const pad=n=>String(n).padStart(2,'0');
+    let index=0;
+    const render=()=>{
+      const item=testimonials[index];
+      quoteEl.textContent=`“${item.quote}”`;
+      authorEl.textContent=`${item.author} · Reseña verificada`;
+      countEl.textContent=`${pad(index+1)} / ${pad(testimonials.length)}`;
+    };
+    slider.querySelector('[data-testimonial-prev]')?.addEventListener('click',()=>{
+      index=(index-1+testimonials.length)%testimonials.length;
+      render();
+    });
+    slider.querySelector('[data-testimonial-next]')?.addEventListener('click',()=>{
+      index=(index+1)%testimonials.length;
+      render();
+    });
+  })();
   document.addEventListener('click',event=>{
     if(!document.body.classList.contains('nav-open')) return;
     if(event.target.closest('header')) return;

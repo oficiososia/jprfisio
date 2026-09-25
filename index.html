@@ -242,9 +242,9 @@
     .quote{max-width:1000px;margin:90px auto 0}
     .quote blockquote{font-size:clamp(31px,4.5vw,60px);line-height:1.17;letter-spacing:-.045em;margin:0;font-weight:400}
     .quote-meta{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #444;margin-top:60px;padding-top:20px;font-size:12px;color:#aaa}
-    .quote-nav{display:inline-flex;align-items:center;gap:12px}
-    .quote-arrow{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border:1px solid #444;border-radius:50%;background:none;color:#aaa;font-size:13px;line-height:1;cursor:pointer;transition:.2s ease}
-    .quote-arrow:hover{border-color:#aaa;color:#fff}
+    .quote-nav{display:inline-flex;align-items:center;gap:6px}
+    .quote-arrow{display:inline;border:0;padding:0;margin:0;background:none;color:inherit;font:inherit;font-size:12px;line-height:inherit;cursor:pointer;transition:color .2s ease}
+    .quote-arrow:hover{color:#fff}
     .faq-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:8vw}
     details{border-top:1px solid var(--line);padding:23px 0}
     details:last-child{border-bottom:1px solid var(--line)}
@@ -458,18 +458,18 @@
   </div>
 </section>
 
-<section class=”testimonials” id=”testimonios”>
-  <div class=”wrap”>
-    <div class=”section-id reveal”>04 — Testimonios</div>
+<section class="testimonials" id="testimonios">
+  <div class="wrap">
+    <div class="section-id reveal">04 — Testimonios</div>
     <!-- Testimonios de ejemplo (ficticios), pendientes de sustituir por reseñas reales de pacientes -->
-    <div class=”quote reveal” data-testimonial-slider>
-      <blockquote data-testimonial-quote>“Llevaba meses arrastrando un dolor de espalda que ya daba por normal. Jorge me ayudó a entender qué lo provocaba y hoy me muevo con mucha más confianza.”</blockquote>
-      <div class=”quote-meta”>
+    <div class="quote reveal" data-testimonial-slider>
+      <blockquote data-testimonial-quote>"Llevaba meses arrastrando un dolor de espalda que ya daba por normal. Jorge me ayudó a entender qué lo provocaba y hoy me muevo con mucha más confianza."</blockquote>
+      <div class="quote-meta">
         <span data-testimonial-author>María G. · Reseña verificada</span>
-        <span class=”quote-nav”>
+        <span class="quote-nav">
           <span data-testimonial-count>01 / 04</span>
-          <button type=”button” class=”quote-arrow” data-testimonial-prev aria-label=”Testimonio anterior”>←</button>
-          <button type=”button” class=”quote-arrow” data-testimonial-next aria-label=”Testimonio siguiente”>→</button>
+          <button type="button" class="quote-arrow" data-testimonial-prev aria-label="Testimonio anterior">←</button>
+          <button type="button" class="quote-arrow" data-testimonial-next aria-label="Testimonio siguiente">→</button>
         </span>
       </div>
     </div>
@@ -564,7 +564,7 @@
     let index=0;
     const render=()=>{
       const item=testimonials[index];
-      quoteEl.textContent=`“${item.quote}”`;
+      quoteEl.textContent=`"${item.quote}"`;
       authorEl.textContent=`${item.author} · Reseña verificada`;
       countEl.textContent=`${pad(index+1)} / ${pad(testimonials.length)}`;
     };

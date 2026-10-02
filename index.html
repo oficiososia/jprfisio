@@ -237,8 +237,8 @@
     .movement-photo{height:min(68vw,760px)}
     .method-photo{display:none}
     @media(min-width:901px){
-      .method-grid{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);grid-template-rows:auto 1fr;grid-template-areas:"intro photo" "steps photo";column-gap:7vw;row-gap:28px}
-      .method-intro{grid-area:intro;padding-top:28px}
+      .method-grid{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);grid-template-rows:auto 1fr;grid-template-areas:"intro photo" "steps photo";column-gap:7vw;row-gap:0}
+      .method-intro{grid-area:intro;padding-top:56px}
       .method-grid .steps{grid-area:steps}
       .method-photo{display:block;grid-area:photo;min-height:560px}
       .movement{display:none}
@@ -315,6 +315,7 @@
       .about-personality{padding:62px 0 72px}.about-personality-inner{grid-template-columns:1fr;gap:0}.personality-note{font-size:22px}
       .final-cta .inner{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}
     }
+    @media(max-width:900px){.method-grid{row-gap:27px}.method-intro{padding-top:28px}}
     @media(max-width:600px){
       :root{--pad:22px}header{top:10px;width:calc(100% - 20px)}nav{height:60px;padding:0 10px 0 8px;gap:8px}.brand{gap:3px;font-size:clamp(8px,2.7vw,12px);overflow:hidden}.brand-logo{width:68px;height:53px}.links{display:none}.menu-toggle{width:42px;height:42px}.mobile-panel{right:0;width:calc(100vw - 20px)}.testimonials-logo{width:136px;height:86px}
       .hero{min-height:auto;padding-top:104px;padding-bottom:38px;align-content:start;gap:24px}

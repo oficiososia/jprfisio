@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jorge-planelles-ricarte-fisio.vercel.app/</loc>
+    <loc>https://jprfisio.vercel.app/</loc>
     <lastmod>2026-09-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://jorge-planelles-ricarte-fisio.vercel.app/legal.html</loc>
+    <loc>https://jprfisio.vercel.app/legal.html</loc>
     <lastmod>2026-09-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>

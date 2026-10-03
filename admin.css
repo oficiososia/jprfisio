@@ -24,3 +24,17 @@ body.login-screen{height:100svh;min-height:0;display:flex;flex-direction:column}
 @media(max-width:800px){.login-screen .login{max-width:480px;grid-template-columns:1fr}.login-screen .login-art{display:none}.login-screen .login-form{padding:clamp(20px,4vh,38px) 26px}.login-screen main{padding:16px 22px}.login-screen footer{flex-wrap:nowrap}.login-screen footer span{font-size:10px}}
 @media(max-height:650px){.login-screen header{height:60px;margin-top:10px}.login-screen .brand img{height:58px;width:78px}.login-screen main{padding-top:10px;padding-bottom:10px}.login-screen .login-form{padding-top:16px;padding-bottom:16px}.login-screen .login-form h2{margin:8px 0;font-size:28px}.login-screen input{padding:8px 12px;margin-bottom:12px}.login-screen form button{min-height:40px}.login-screen .login-form>p{margin-bottom:12px}.login-screen .login-art>img{height:70px;margin-bottom:8px}.login-screen footer{min-height:40px;padding-top:2px;padding-bottom:2px}.login-screen footer img{height:36px}}
 @media(max-height:450px){.login-screen main{padding:6px 22px}.login-screen .login{max-width:680px;grid-template-columns:1fr}.login-screen .login-art,.login-screen .login-form>.eyebrow,.login-screen .login-form>p,.login-screen .login-form>h2{display:none}.login-screen .login-form{padding:14px 20px}.login-screen form{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}.login-screen form button{grid-column:1/-1}.login-screen footer{min-height:32px}.login-screen footer img{height:28px}}
+
+.header-controls{display:flex;align-items:center;gap:22px;margin-left:auto}
+header .admin-tabs{margin:0;padding:0;border:0;gap:5px}
+header .admin-tabs button{min-width:82px;color:#fff8efbd;border:0;padding:0 14px}
+header .admin-tabs button:hover{background:#ffffff12}
+header .admin-tabs [aria-selected="true"]{background:var(--cream);color:#3F3025}
+header #logout{color:#fff8ef;border-color:#fff8ef40;font-size:12px;white-space:nowrap;padding:0 14px}
+header #logout:hover{background:#ffffff12}
+header .admin-tabs button:focus-visible,header #logout:focus-visible{outline-color:var(--cream)}
+body:not(.login-screen) main{padding-top:32px}
+body:not(.login-screen) .toolbar{border-top:0;padding-top:0}
+.login-screen .header-controls{display:none}
+@media(max-width:1100px){.header-controls{gap:12px}body:not(.login-screen) header .brand span{font-size:11px}body:not(.login-screen) header .back{display:none}}
+@media(max-width:800px){body:not(.login-screen) header{display:grid;grid-template-columns:1fr auto;height:auto;gap:6px 12px;padding:0 14px 12px}body:not(.login-screen) .header-controls{display:contents}body:not(.login-screen) header .brand{grid-column:1;grid-row:1}body:not(.login-screen) header #logout{grid-column:2;grid-row:1;min-height:38px}body:not(.login-screen) header .admin-tabs{grid-column:1/-1;grid-row:2;display:flex;width:100%}body:not(.login-screen) header .admin-tabs button{flex:1;min-width:0;min-height:42px}.login-screen header .back{display:block}}

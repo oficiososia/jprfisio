@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
     url.searchParams.set('by', by); url.searchParams.set('limit', '20');
     try {
       const result = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(12000) });
-      if (!result.ok) return { error: result.status === 403 ? 'Vercel no permite consultar este informe con los permisos o el plan actuales.' : `Vercel no ha podido devolver este informe (HTTP ${result.status}).` };
+      if (!result.ok) return { error: (result.status === 402 || result.status === 403) ? 'Este informe requiere permisos o un plan de Vercel que lo incluya.' : `Vercel no ha podido devolver este informe (HTTP ${result.status}).` };
       const json = await result.json();
       return { data: json.data };
     } catch { return { error: 'No se ha podido conectar con Vercel. Vuelve a intentarlo.' }; }

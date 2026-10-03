@@ -1,10 +1,15 @@
 const crypto = require('node:crypto');
 const cookieName = '__Host-jpr_admin';
-const username = () => process.env.ADMIN_USERNAME || 'jpr';
+function setting(name) {
+  let value = (process.env[name] || '').trim();
+  if (value.length >= 2 && ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'")))) value = value.slice(1, -1);
+  return value;
+}
+const username = () => setting('ADMIN_USERNAME') || 'jpr';
 const equal = (a, b) => { const x = crypto.createHash('sha256').update(String(a)).digest(); const y = crypto.createHash('sha256').update(String(b)).digest(); return crypto.timingSafeEqual(x, y); };
-const sign = value => crypto.createHmac('sha256', process.env.ADMIN_SESSION_SECRET).update(value).digest('base64url');
+const sign = value => crypto.createHmac('sha256', setting('ADMIN_SESSION_SECRET')).update(value).digest('base64url');
 function authenticated(req) {
-  if (!process.env.ADMIN_SESSION_SECRET) return false;
+  if (!setting('ADMIN_SESSION_SECRET')) return false;
   const cookie = (req.headers.cookie || '').split(';').map(x => x.trim()).find(x => x.startsWith(cookieName + '='));
   if (!cookie) return false;
   const [payload, signature] = cookie.slice(cookieName.length + 1).split('.');
@@ -18,7 +23,7 @@ module.exports = async (req, res) => {
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   const action = req.query?.action || 'session';
   const send = (status, data) => res.status(status).json(data);
-  const configured = Boolean(process.env.ADMIN_PASSWORD) && process.env.ADMIN_SESSION_SECRET?.length >= 32;
+  const configured = Boolean(setting('ADMIN_PASSWORD')) && setting('ADMIN_SESSION_SECRET')?.length >= 32;
   if (!configured) return send(503, { error: 'El acceso de administrador está pendiente de configuración.' });
   if (req.method === 'POST') {
     const host = req.headers['x-forwarded-host'] || req.headers.host;
@@ -34,7 +39,7 @@ module.exports = async (req, res) => {
     if (++attempt.count > 5) { res.setHeader('Retry-After', '900'); return send(429, { error: 'Demasiados intentos. Inténtalo dentro de 15 minutos.' }); }
     let body;
     try { body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {}; } catch { return send(400, { error: 'Solicitud inválida.' }); }
-    if (typeof body.username !== 'string' || typeof body.password !== 'string' || body.password.length > 1024 || !equal(body.username, username()) || !equal(body.password, process.env.ADMIN_PASSWORD)) return send(401, { error: 'Usuario o contraseña incorrectos.' });
+    if (typeof body.username !== 'string' || typeof body.password !== 'string' || body.password.length > 1024 || !equal(body.username, username()) || !equal(body.password, setting('ADMIN_PASSWORD'))) return send(401, { error: 'Usuario o contraseña incorrectos.' });
     attempts.delete(ip);
     const payload = Buffer.from(JSON.stringify({ user: username(), exp: now + 8 * 60 * 60 * 1000, nonce: crypto.randomBytes(16).toString('hex') })).toString('base64url');
     res.setHeader('Set-Cookie', `${cookieName}=${payload}.${sign(payload)}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`);

@@ -180,6 +180,7 @@
     .photo{position:relative;background:var(--cream);overflow:hidden;border-radius:var(--radius)}
     .hero-photo{width:min(40vw,620px);height:auto;justify-self:center;align-self:center}
     .photo img{display:block;width:100%;height:auto}
+    .method-photo img,.movement-photo img,.training-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
     .photo:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,0,0,.025))}
     .placeholder{position:absolute;inset:0;display:flex;align-items:flex-end;padding:24px;color:#66645f;font-size:11px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;max-width:430px}
     .photo-note{position:absolute;right:-20px;top:48px;writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
@@ -481,12 +482,12 @@
       <div class="step"><b>03</b><div><h3>Tratamiento personalizado</h3><p>Selección de las herramientas terapéuticas más adecuadas, adaptadas a las necesidades y objetivos individuales de cada persona.</p></div></div>
       <div class="step"><b>04</b><div><h3>Seguimiento y autonomía</h3><p>Valoración continua de la evolución para adaptar el tratamiento y proporcionar herramientas que favorezcan una mayor autonomía en las actividades de la vida diaria.</p></div></div>
     </div>
-    <div class="photo method-photo reveal"><div class="placeholder">Fotografía real — paciente realizando ejercicio o movimiento funcional supervisado por Jorge. Encuadre amplio, consulta visible, fotografía dinámica y natural.</div></div>
+    <div class="photo method-photo reveal"><img data-site-photo="method" src="hero.jpg" alt="Jorge Planelles Ricarte en consulta · Método · ejercicio supervisado" width="1673" height="1900" loading="lazy" decoding="async"></div>
   </div>
 </section>
 
 <div class="movement">
-  <div class="photo movement-photo reveal"><div class="placeholder">Fotografía real — paciente realizando ejercicio o movimiento funcional supervisado por Jorge. Encuadre amplio, consulta visible, fotografía dinámica y natural.</div></div>
+  <div class="photo movement-photo reveal"><img data-site-photo="movement" src="hero.jpg" alt="Jorge Planelles Ricarte en consulta · Movimiento" width="1673" height="1900" loading="lazy" decoding="async"></div>
 </div>
 
 <section id="entrenamientos">
@@ -494,7 +495,7 @@
     <div class="training-copy reveal">
       <div class="section-id">03 — Entrenamientos</div>
       <h2><span class="training-title-line">Entrenar con sentido,</span> <span class="training-title-line">avanzar con seguridad.</span></h2>
-      <div class="photo training-photo"><div class="placeholder">Fotografía real — entrenamiento adaptado, trabajo de fuerza o movimiento funcional supervisado por Jorge.</div></div>
+      <div class="photo training-photo"><img data-site-photo="training" src="hero.jpg" alt="Jorge Planelles Ricarte en consulta · Entrenamiento adaptado" width="1673" height="1900" loading="lazy" decoding="async"></div>
     </div>
     <div class="training-list reveal">
       <div class="training-item"><b>01</b><div><h3>Conciencia Corporal</h3><p>Es fundamental comprender cómo se organiza nuestro cuerpo y cómo se relaciona con el espacio. La conciencia corporal es la base para desarrollar un movimiento más controlado y eficiente.</p></div></div>

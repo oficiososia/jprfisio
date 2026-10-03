@@ -17,6 +17,8 @@ function authenticated(req) {
   try { const session = JSON.parse(Buffer.from(payload, 'base64url')); return session.exp > Date.now() && session.user === username(); } catch { return false; }
 }
 const attempts = new Map();
+const statsCache = new Map();
+const photoCache = new Map();
 async function readBody(req, limit = 8192) {
   let raw = req.body;
   if (raw == null) {
@@ -55,7 +57,7 @@ module.exports = async (req, res) => {
     if (!authenticated(req)) return send(401, {error:'Inicia sesión para editar la web.'});
     if(action==='photo'&&req.method==='GET') {
       const path=req.query?.src;if(typeof path!=='string'||!/^media\/[a-f0-9]{32}\.(webp|png|jpg)$/.test(path))return send(400,{error:'Imagen no válida.'});
-      try{const file=await github(path+'?ref=main');const bytes=Buffer.from(file.content,'base64');if(!bytes.length||bytes.length>2097152)return send(400,{error:'Imagen no válida.'});res.setHeader('Content-Type',path.endsWith('.webp')?'image/webp':path.endsWith('.png')?'image/png':'image/jpeg');return res.status(200).send(bytes);}catch(error){return send(error.status||502,{error:error.message});}
+      try{let bytes=photoCache.get(path);if(!bytes){const headers={Accept:'application/vnd.github.raw+json','X-GitHub-Api-Version':'2022-11-28'};if(setting('GITHUB_CONTENT_TOKEN'))headers.Authorization='Bearer '+setting('GITHUB_CONTENT_TOKEN');const response=await fetch('https://api.github.com/repos/oficiososia/jprfisio/contents/'+path+'?ref=main',{headers,signal:AbortSignal.timeout(18000)});if(!response.ok)return send(502,{error:'No se ha podido cargar la foto. Vuelve a intentarlo.'});bytes=Buffer.from(await response.arrayBuffer());if(!bytes.length||bytes.length>2097152)return send(400,{error:'Imagen no válida.'});if(photoCache.size>=12)photoCache.delete(photoCache.keys().next().value);photoCache.set(path,bytes);}res.setHeader('Cache-Control','private, max-age=3600');res.setHeader('Content-Type',path.endsWith('.webp')?'image/webp':path.endsWith('.png')?'image/png':'image/jpeg');return res.status(200).send(bytes);}catch(error){return send(502,{error:'No se ha podido cargar la foto. Vuelve a intentarlo.'});}
     }
     if(action==='content'&&req.method==='GET') {
       try {const file=await github('site-content.json?ref=main');return send(200,{content:JSON.parse(Buffer.from(file.content,'base64').toString('utf8')),revision:file.sha,canPublish:Boolean(setting('GITHUB_CONTENT_TOKEN'))});}
@@ -127,6 +129,8 @@ module.exports = async (req, res) => {
   const projectId = process.env.VERCEL_ANALYTICS_PROJECT_ID;
   if (!token || !projectId) return send(503, { error: 'La conexión con las estadísticas de Vercel está pendiente de configuración.' });
   const days = [1, 7, 30].includes(Number(req.query.days)) ? Number(req.query.days) : 7;
+  const cacheKey=projectId+':'+(process.env.VERCEL_ANALYTICS_TEAM_ID||'')+':'+days;
+  const cached=statsCache.get(cacheKey);if(cached&&cached.expires>Date.now())return send(200,cached.data);
   const until = new Date(); const since = new Date(until.getTime() - days * 86400000);
   async function query(dataset, by) {
     const url = new URL(`https://api.vercel.com/v1/query/web-analytics/${dataset}/aggregate`);
@@ -142,9 +146,11 @@ module.exports = async (req, res) => {
     } catch { return { error: 'No se ha podido conectar con Vercel. Vuelve a intentarlo.' }; }
   }
   const dimensions = ['day', 'requestPath', 'country', 'referrerHostname', 'deviceType', 'browserName', 'osName', 'utmSource', 'utmMedium', 'utmCampaign'];
-  const results = await Promise.all(dimensions.map(by => query('visits', by)));
+  const [results,events] = await Promise.all([Promise.all(dimensions.map(by => query('visits', by))),query('events','eventName')]);
   const reports = Object.fromEntries(dimensions.map((by, i) => [by, results[i]]));
-  reports.events = await query('events', 'eventName');
-  return send(200, { since: since.toISOString(), until: until.toISOString(), reports });
+  reports.events = events;
+  const data={since:since.toISOString(),until:until.toISOString(),reports};
+  if(results.some(report=>Array.isArray(report.data)))statsCache.set(cacheKey,{expires:Date.now()+60000,data});
+  return send(200,data);
 };
 

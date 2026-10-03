@@ -413,7 +413,7 @@
     <div class="actions"><a class="btn dark" href="https://wa.me/34670028629?text=Hola%20Jorge%2C%20%C2%BFtendr%C3%ADas%20disponibilidad%20para%20" target="_blank" rel="noopener">Reservar cita</a><a class="text-link" href="#metodologia">Conocer mi forma de trabajar →</a></div>
   </div>
   <div class="photo hero-photo reveal">
-    <img src="hero.jpg" alt="Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta" width="1673" height="1900" decoding="async" fetchpriority="high">
+    <img data-site-photo="hero" src="hero.jpg" alt="Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta" width="1673" height="1900" decoding="async" fetchpriority="high">
     <span class="photo-note">Consulta · Movimiento · Precisión</span>
   </div>
 </section>
@@ -426,14 +426,14 @@
   <div class="wrap about-grid">
     <div class="about-media reveal">
       <figure class="photo about-photo">
-        <img src="hero.jpg" alt="Jorge Planelles Ricarte tratando a un paciente en consulta" width="1673" height="1900" loading="lazy" decoding="async">
+        <img data-site-photo="aboutDesktop" src="hero.jpg" alt="Jorge Planelles Ricarte tratando a un paciente en consulta" width="1673" height="1900" loading="lazy" decoding="async">
       </figure>
     </div>
     <div class="about-copy reveal">
       <div class="section-id">01 — Sobre mí</div>
       <h2><span class="about-heading-line">Hola, soy Jorge</span><span class="about-heading-line">Planelles Ricarte,</span><span class="about-heading-line about-heading-light">fisioterapeuta.</span></h2>
       <figure class="photo about-photo about-photo-mobile">
-        <img src="hero.jpg" alt="Jorge Planelles Ricarte tratando a un paciente en consulta" width="1673" height="1900" loading="lazy" decoding="async">
+        <img data-site-photo="aboutMobile" src="hero.jpg" alt="Jorge Planelles Ricarte tratando a un paciente en consulta" width="1673" height="1900" loading="lazy" decoding="async">
       </figure>
       <div class="bio">
         <p>Desde que decidí estudiar fisioterapia tuve claro que no quería limitarme a tratar el dolor. Quería comprender qué había detrás de él.</p>
@@ -583,12 +583,15 @@
     menuToggle.setAttribute('aria-expanded',String(isOpen));
   });
   mobilePanel?.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
-  (()=>{
-    const testimonials=[
+  const siteContentPromise=fetch('/site-content.json').then(response=>response.ok?response.json():null).catch(()=>null);
+  siteContentPromise.then(content=>{if(!content?.photos)return;document.querySelectorAll('[data-site-photo]').forEach(image=>{const photo=content.photos[image.dataset.sitePhoto];if(photo?.src){image.src=photo.src;image.alt=photo.alt||'';}});});
+  (async()=>{
+    let testimonials=[
       {quote:'Un gran profesional, me ha estado tratando un problema de fascitis que llevaba tiempo arrastrando y en pocas sesiones he notado una gran mejoría... sin duda volveré la vez que lo necesite. GRACIAS 💪',author:'Miguel Ángel Pamies'},
       {quote:'Jorge, un gran profesional, con un trato de 10, transmite una tranquilidad y confianza que no dudas un segundo de ponerte en sus manos, a pesar de tratar tus patologías, tiene un porqué de ellas... Me encanta!! Aconsejable un 100 x 100',author:'Lourdes'},
       {quote:'Un trato excelente y totalmente profesional. Desde el primer momento me sentí muy bien atendido, con una valoración completa y explicaciones claras sobre el problema y el tratamiento.',author:'Álvaro Melgarejo'}
     ];
+    try { const content=await siteContentPromise; if(content?.testimonials?.length) testimonials=content.testimonials; } catch {}
     const slider=document.querySelector('[data-testimonial-slider]');
     if(!slider) return;
     const quoteEl=slider.querySelector('[data-testimonial-quote]');
@@ -621,6 +624,7 @@
       index=(index+1)%testimonials.length;
       render();
     });
+    render();
     syncHeight();
     let resizeTimer;
     window.addEventListener('resize',()=>{
@@ -686,3 +690,4 @@
 </script>
 </body>
 </html>
+

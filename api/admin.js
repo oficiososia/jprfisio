@@ -39,7 +39,7 @@ function validateContent(value){
   if(!value||!Array.isArray(value.testimonials)||value.testimonials.length<1||value.testimonials.length>20)throw new Error('Incluye entre 1 y 20 testimonios.');
   const testimonials=value.testimonials.map(item=>{if(typeof item?.author!=='string'||!item.author.trim()||item.author.length>120||typeof item.quote!=='string'||!item.quote.trim()||item.quote.length>2500)throw new Error('Revisa el nombre y el texto de cada testimonio.');return {author:item.author.trim(),quote:item.quote.trim()};});
   const photos={};
-  for(const key of ['hero','aboutDesktop','aboutMobile']){const item=value.photos?.[key];if(!item||typeof item.src!=='string'||!/^((hero\.jpg)|(media\/[a-f0-9]{32}\.(webp|png|jpg)))$/.test(item.src)||typeof item.alt!=='string'||item.alt.length>300)throw new Error('Revisa las imágenes y sus descripciones.');photos[key]={src:item.src,alt:item.alt.trim()};}
+  for(const key of ['hero','aboutDesktop','aboutMobile','method','movement','training']){const item=value.photos?.[key]||(['method','movement','training'].includes(key)?value.photos?.hero:null);if(!item||typeof item.src!=='string'||!/^((hero\.jpg)|(media\/[a-f0-9]{32}\.(webp|png|jpg)))$/.test(item.src)||typeof item.alt!=='string'||item.alt.length>300)throw new Error('Revisa las imágenes y sus descripciones.');photos[key]={src:item.src,alt:item.alt.trim()};}
   return {testimonials,photos};
 }
 

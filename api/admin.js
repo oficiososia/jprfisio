@@ -51,8 +51,12 @@ module.exports = async (req, res) => {
   const send = (status, data) => res.status(status).json(data);
   const configured = Boolean(setting('ADMIN_PASSWORD')) && setting('ADMIN_SESSION_SECRET')?.length >= 32;
   if (!configured) return send(503, { error: 'El acceso de administrador está pendiente de configuración.' });
-  if (['content','publish','upload'].includes(action)) {
+  if (['content','publish','upload','photo'].includes(action)) {
     if (!authenticated(req)) return send(401, {error:'Inicia sesión para editar la web.'});
+    if(action==='photo'&&req.method==='GET') {
+      const path=req.query?.src;if(typeof path!=='string'||!/^media\/[a-f0-9]{32}\.(webp|png|jpg)$/.test(path))return send(400,{error:'Imagen no válida.'});
+      try{const file=await github(path+'?ref=main');const bytes=Buffer.from(file.content,'base64');if(!bytes.length||bytes.length>2097152)return send(400,{error:'Imagen no válida.'});res.setHeader('Content-Type',path.endsWith('.webp')?'image/webp':path.endsWith('.png')?'image/png':'image/jpeg');return res.status(200).send(bytes);}catch(error){return send(error.status||502,{error:error.message});}
+    }
     if(action==='content'&&req.method==='GET') {
       try {const file=await github('site-content.json?ref=main');return send(200,{content:JSON.parse(Buffer.from(file.content,'base64').toString('utf8')),revision:file.sha,canPublish:Boolean(setting('GITHUB_CONTENT_TOKEN'))});}
       catch(error){return send(error.status||502,{error:error.message});}

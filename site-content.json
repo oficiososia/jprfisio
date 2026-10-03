@@ -15,28 +15,52 @@
   ],
   "photos": {
     "hero": {
-      "src": "hero.jpg",
-      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta"
+      "src": "media/33eca86d24a977496aba22816e792a80.webp",
+      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta",
+      "position": {
+        "x": 67,
+        "y": 50
+      }
     },
     "aboutDesktop": {
-      "src": "media/971bff4a4f262315feacd17bea5b720c.webp",
-      "alt": "Jorge Planelles Ricarte tratando a un paciente en consulta"
+      "src": "media/e40cfd81e59fc8118c4cacc551578b01.webp",
+      "alt": "Jorge Planelles Ricarte tratando a un paciente en consulta",
+      "position": {
+        "x": 27,
+        "y": 50
+      }
     },
     "aboutMobile": {
-      "src": "media/3cce112af872e55eb1b6668d93860218.webp",
-      "alt": "Jorge Planelles Ricarte tratando a un paciente en consulta"
+      "src": "media/a12414cff96941a6231699d0e7ea5e96.webp",
+      "alt": "Jorge Planelles Ricarte tratando a un paciente en consulta",
+      "position": {
+        "x": 81,
+        "y": 50
+      }
     },
     "method": {
       "src": "hero.jpg",
-      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta"
+      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
     },
     "movement": {
       "src": "hero.jpg",
-      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta"
+      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
     },
     "training": {
       "src": "hero.jpg",
-      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta"
+      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta",
+      "position": {
+        "x": 50,
+        "y": 50
+      }
     }
   }
 }

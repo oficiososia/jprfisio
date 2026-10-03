@@ -1,0 +1,12 @@
+{
+  "testimonials": [
+    {"quote":"Un gran profesional, me ha estado tratando un problema de fascitis que llevaba tiempo arrastrando y en pocas sesiones he notado una gran mejoría... sin duda volveré la vez que lo necesite. GRACIAS 💪","author":"Miguel Ángel Pamies"},
+    {"quote":"Jorge, un gran profesional, con un trato de 10, transmite una tranquilidad y confianza que no dudas un segundo de ponerte en sus manos, a pesar de tratar tus patologías, tiene un porqué de ellas... Me encanta!! Aconsejable un 100 x 100","author":"Lourdes"},
+    {"quote":"Un trato excelente y totalmente profesional. Desde el primer momento me sentí muy bien atendido, con una valoración completa y explicaciones claras sobre el problema y el tratamiento.","author":"Álvaro Melgarejo"}
+  ],
+  "photos": {
+    "hero": {"src":"hero.jpg","alt":"Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta"},
+    "aboutDesktop": {"src":"hero.jpg","alt":"Jorge Planelles Ricarte tratando a un paciente en consulta"},
+    "aboutMobile": {"src":"hero.jpg","alt":"Jorge Planelles Ricarte tratando a un paciente en consulta"}
+  }
+}

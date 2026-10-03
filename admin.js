@@ -1,51 +1,19 @@
-const login = document.querySelector('#login');
-const dashboard = document.querySelector('#dashboard');
-const form = document.querySelector('#login-form');
-const message = document.querySelector('#login-message');
-const status = document.querySelector('#status');
-const reports = document.querySelector('#reports');
-const names = { day: 'Evolución diaria', requestPath: 'Páginas', country: 'Países', referrerHostname: 'Procedencia de las visitas', deviceType: 'Dispositivos', browserName: 'Navegadores', osName: 'Sistemas operativos', utmSource: 'Fuentes de campaña', utmMedium: 'Medios de campaña', utmCampaign: 'Campañas', events: 'Eventos personalizados' };
-async function api(action, body) {
-  const response = await fetch(`/api/admin?action=${action}`, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
-  const data = await response.json();
-  if (!response.ok) { const error = new Error(data.error || 'No se ha podido completar la solicitud.'); error.code = response.status; throw error; }
-  return data;
-}
-function showLogin() { dashboard.hidden = true; login.hidden = false; reports.replaceChildren(); }
-function cell(tag, text) { const el = document.createElement(tag); el.textContent = text; return el; }
-async function load() {
-  const refresh = document.querySelector('#refresh'); refresh.disabled = true;
-  status.textContent = 'Consultando estadísticas…'; reports.replaceChildren();
-  try {
-    const data = await api('stats&days=' + document.querySelector('#days').value);
-    for (const [key, report] of Object.entries(data.reports)) {
-      const card = document.createElement('section'); card.className = 'card'; card.append(cell('h2', names[key] || key));
-      if (report.error) card.append(cell('p', report.error));
-      else if (!Array.isArray(report.data) || !report.data.length) card.append(cell('p', 'Todavía no hay datos para este periodo.'));
-      else {
-        const table = document.createElement('table'); const head = document.createElement('thead'); const tr = document.createElement('tr');
-        ['Detalle', key === 'events' ? 'Eventos' : 'Vistas', 'Visitantes'].forEach(x => tr.append(cell('th', x))); head.append(tr); table.append(head);
-        const tbody = document.createElement('tbody');
-        for (const row of report.data) {
-          const item = document.createElement('tr');
-          let label = row[key === 'day' ? 'timestamp' : key === 'events' ? 'eventName' : key];
-          if (key === 'day' && label) label = new Date(label).toLocaleDateString('es-ES');
-          item.append(cell('td', label || 'Sin especificar'), cell('td', row.pageviews ?? row.count ?? '—'), cell('td', row.visitors ?? '—')); tbody.append(item);
-        }
-        table.append(tbody); card.append(table);
-      }
-      reports.append(card);
-    }
-    status.textContent = 'Actualizado a las ' + new Date().toLocaleTimeString('es-ES') + '. Los informes dependen de la retención y los permisos de tu plan.';
-  } catch (error) { if (error.code === 401) { showLogin(); message.textContent = 'La sesión ha caducado.'; } else status.textContent = error.message; }
-  finally { refresh.disabled = false; }
-}
-async function enter() { login.hidden = true; dashboard.hidden = false; await load(); }
-form.addEventListener('submit', async event => {
-  event.preventDefault(); const button = form.querySelector('button'); button.disabled = true; message.textContent = '';
-  try { const fields = new FormData(form); await api('login', { username: fields.get('username'), password: fields.get('password') }); form.reset(); await enter(); }
-  catch (error) { message.textContent = error.message; } finally { button.disabled = false; }
-});
-document.querySelector('#logout').addEventListener('click', async () => { try { await api('logout', {}); showLogin(); } catch (error) { status.textContent = error.message; } });
-document.querySelector('#refresh').addEventListener('click', load); document.querySelector('#days').addEventListener('change', load);
-api('session').then(enter).catch(error => { if (error.code !== 401) message.textContent = error.message; });
+const login=document.querySelector('#login'),dashboard=document.querySelector('#dashboard'),form=document.querySelector('#login-form'),message=document.querySelector('#login-message'),status=document.querySelector('#status'),reports=document.querySelector('#reports'),summaryPanel=document.querySelector('#summary');
+const names={day:'La evolución de tus visitas',requestPath:'Las páginas que más interesan',country:'Desde dónde te visitan',referrerHostname:'Cómo llegan a tu web',deviceType:'Desde qué dispositivo',browserName:'Navegadores',osName:'Sistemas operativos',utmSource:'Fuentes de campaña',utmMedium:'Medios de campaña',utmCampaign:'Campañas',events:'Eventos personalizados'};
+const number=value=>new Intl.NumberFormat('es-ES').format(value);
+const countryNames=new Intl.DisplayNames(['es'],{type:'region'});
+async function api(action,body){const response=await fetch(`/api/admin?action=${action}`,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const data=await response.json();if(!response.ok){const error=new Error(data.error||'No se ha podido completar la solicitud.');error.code=response.status;throw error;}return data;}
+function cell(tag,text){const el=document.createElement(tag);el.textContent=text;return el;}
+function showLogin(){dashboard.hidden=true;login.hidden=false;reports.replaceChildren();summaryPanel.replaceChildren();}
+function label(key,row){let value=row[key==='day'?'timestamp':key==='events'?'eventName':key];if(key==='day'&&value)return new Date(value).toLocaleDateString('es-ES',{day:'numeric',month:'short'});if(!value)return key==='referrerHostname'?'Acceso directo':'Sin especificar';if(key==='country'){try{return countryNames.of(value);}catch{return value;}}if(key==='deviceType')return {mobile:'Móvil',desktop:'Ordenador',tablet:'Tablet'}[String(value).toLowerCase()]||value;return value;}
+function metric(row){return Number(row.pageviews??row.count??0);}
+function table(key,rows){const detail=document.createElement('details');detail.append(cell('summary','Ver datos completos'));const wrap=cell('div','');wrap.className='table-wrap';const t=cell('table',''),head=cell('thead',''),tr=cell('tr','');['Detalle',key==='events'?'Eventos':'Vistas','Visitantes'].forEach(x=>tr.append(cell('th',x)));head.append(tr);t.append(head);const body=cell('tbody','');for(const row of rows){const r=cell('tr','');r.append(cell('td',label(key,row)),cell('td',number(metric(row))),cell('td',row.visitors==null?'—':number(row.visitors)));body.append(r);}t.append(body);wrap.append(t);detail.append(wrap);return detail;}
+const ns='http://www.w3.org/2000/svg';function svgElement(tag,attrs={},text){const el=document.createElementNS(ns,tag);for(const [key,value]of Object.entries(attrs))el.setAttribute(key,String(value));if(text!=null)el.textContent=text;return el;}
+function trend(rows){const legend=cell('div','');legend.className='legend';for(const [name,color]of [['Vistas','#6b5848'],['Visitantes diarios','#b9a68c']]){const span=cell('span',''),dot=cell('i','');dot.style.background=color;span.append(dot,document.createTextNode(name));legend.append(span);}const svg=svgElement('svg',{viewBox:'0 0 800 250',role:'img','aria-label':'Evolución diaria de vistas y visitantes',class:'chart'});svg.append(svgElement('title',{},'Vistas y visitantes por día. Consulta los valores exactos en Ver datos completos.'));const w=800,h=250,left=38,right=18,top=18,bottom=38,plotW=w-left-right,plotH=h-top-bottom;const max=Math.max(1,...rows.flatMap(r=>[metric(r),Number(r.visitors)||0]));const ceiling=Math.max(4,Math.ceil(max/4)*4);const x=i=>left+(rows.length===1?plotW/2:i*plotW/(rows.length-1));const y=v=>top+plotH*(1-v/ceiling);for(let i=0;i<=4;i++){const value=ceiling*i/4;svg.append(svgElement('line',{x1:left,y1:y(value),x2:w-right,y2:y(value),stroke:'#EEEAE2'}));svg.append(svgElement('text',{x:left-9,y:y(value)+4,'text-anchor':'end'},number(value)));}for(const [field,color]of [['pageviews','#6b5848'],['visitors','#b9a68c']]){const points=rows.map((r,i)=>`${x(i)},${y(Number(r[field])||0)}`).join(' ');svg.append(svgElement('polyline',{points,fill:'none',stroke:color,'stroke-width':2.5,'stroke-linejoin':'round'}));rows.forEach((r,i)=>{const dot=svgElement('circle',{cx:x(i),cy:y(Number(r[field])||0),r:3.5,fill:color});dot.append(svgElement('title',{},`${label('day',r)} · ${field==='pageviews'?'Vistas':'Visitantes'}: ${r[field]||0}`));svg.append(dot);});}rows.forEach((r,i)=>{if(i===0||i===rows.length-1||i%Math.max(1,Math.ceil(rows.length/6))===0)svg.append(svgElement('text',{x:x(i),y:h-12,'text-anchor':i===0?'start':i===rows.length-1?'end':'middle'},label('day',r)));});const wrap=cell('div','');wrap.append(legend,svg);return wrap;}
+function bars(key,rows){const wrap=cell('div','');const total=rows.reduce((sum,r)=>sum+metric(r),0);for(const row of rows.slice(0,8)){const item=cell('div','');item.className='bar-item';const heading=cell('div','');heading.className='bar-heading';const count=cell('strong',number(metric(row)));count.append(cell('small',Math.round(metric(row)/total*100)+' %'));heading.append(cell('span',label(key,row)),count);const track=cell('div','');track.className='bar-track';const fill=cell('div','');fill.className='bar-fill';fill.style.width=(metric(row)/total*100)+'%';track.append(fill);item.append(heading,track);wrap.append(item);}return wrap;}
+function stat(title,value,description){const card=cell('div','');card.className='stat';card.append(cell('span',title),cell('strong',value),cell('p',description));card.firstChild.className='eyebrow';card.children[1].className='value';summaryPanel.append(card);}
+let generation=0;
+async function load(){const request=++generation;const refresh=document.querySelector('#refresh');refresh.disabled=true;status.textContent='Consultando estadísticas…';reports.replaceChildren();summaryPanel.replaceChildren();try{const data=await api('stats&days='+document.querySelector('#days').value);if(request!==generation)return;const available=Object.entries(data.reports).filter(([,r])=>!r.error&&Array.isArray(r.data)&&r.data.some(x=>metric(x)>0));if(!available.length){status.textContent='Todavía no hay actividad disponible para este periodo.';return;}const daily=data.reports.day?.data;if(Array.isArray(daily)&&daily.some(r=>metric(r)>0)){stat('Vistas de páginas',number(daily.reduce((s,r)=>s+metric(r),0)),'En el periodo seleccionado');const peak=[...daily].sort((a,b)=>Number(b.visitors||0)-Number(a.visitors||0))[0];stat('Mayor alcance diario',number(peak.visitors||0),'Visitantes · '+label('day',peak));}const devices=data.reports.deviceType?.data;if(Array.isArray(devices)&&devices.some(r=>metric(r)>0)){const total=devices.reduce((s,r)=>s+metric(r),0),mobile=devices.filter(r=>String(r.deviceType).toLowerCase()==='mobile').reduce((s,r)=>s+metric(r),0);stat('Visitas desde móvil',Math.round(mobile/total*100)+' %','Porcentaje de vistas de páginas');}for(const [key,report]of available){const rows=[...report.data].filter(r=>key==='day'||metric(r)>0).sort(key==='day'?(a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp):(a,b)=>metric(b)-metric(a));const card=cell('section','');card.className='card'+(key==='day'?' wide':'');card.append(cell('h2',names[key]||key));const caption=cell('p',key==='day'?'Vistas y visitantes de cada día.':'Distribución de las vistas de páginas.');caption.className='caption';card.append(caption,key==='day'?trend(rows):bars(key,rows),table(key,rows));reports.append(card);}status.textContent='Actualizado a las '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})+' · '+new Date(data.since).toLocaleDateString('es-ES')+' — '+new Date(data.until).toLocaleDateString('es-ES');}catch(error){if(request!==generation)return;if(error.code===401){showLogin();message.textContent='La sesión ha caducado.';}else status.textContent=error.message;}finally{if(request===generation)refresh.disabled=false;}}
+async function enter(){login.hidden=true;dashboard.hidden=false;await load();}
+form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button');button.disabled=true;message.textContent='';try{const fields=new FormData(form);await api('login',{username:fields.get('username'),password:fields.get('password')});form.reset();await enter();}catch(error){message.textContent=error.message;}finally{button.disabled=false;}});
+document.querySelector('#logout').addEventListener('click',async()=>{try{await api('logout',{});++generation;showLogin();}catch(error){status.textContent=error.message;}});document.querySelector('#refresh').addEventListener('click',load);document.querySelector('#days').addEventListener('change',load);api('session').then(enter).catch(error=>{if(error.code!==401)message.textContent=error.message;});

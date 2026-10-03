@@ -112,7 +112,7 @@ module.exports = async (req, res) => {
     if (typeof body.username !== 'string' || typeof body.password !== 'string' || body.password.length > 1024 || !equal(body.username, username()) || !equal(body.password, setting('ADMIN_PASSWORD'))) return send(401, { error: 'Usuario o contraseña incorrectos.' });
     attempts.delete(ip);
     const payload = Buffer.from(JSON.stringify({ user: username(), exp: now + 8 * 60 * 60 * 1000, nonce: crypto.randomBytes(16).toString('hex') })).toString('base64url');
-    res.setHeader('Set-Cookie', `${cookieName}=${payload}.${sign(payload)}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`);
+    res.setHeader('Set-Cookie', `${cookieName}=${payload}.${sign(payload)}; HttpOnly; Secure; SameSite=Strict; Path=/`);
     return send(200, { ok: true });
   }
   if (req.method !== 'GET') return send(405, { error: 'Método no permitido.' });

@@ -585,7 +585,7 @@
   });
   mobilePanel?.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
   const siteContentPromise=fetch('/site-content.json').then(response=>response.ok?response.json():null).catch(()=>null);
-  siteContentPromise.then(content=>{if(!content?.photos)return;document.querySelectorAll('[data-site-photo]').forEach(image=>{const photo=content.photos[image.dataset.sitePhoto];if(photo?.src){image.src=photo.src;image.alt=photo.alt||'';if(photo.position&&Number.isFinite(photo.position.x)&&Number.isFinite(photo.position.y)){image.style.objectPosition=photo.position.x+'% '+photo.position.y+'%';}}});});
+  siteContentPromise.then(content=>{if(!content?.photos)return;document.querySelectorAll('[data-site-photo]').forEach(image=>{const key={aboutMobile:'aboutDesktop',movement:'method'}[image.dataset.sitePhoto]||image.dataset.sitePhoto;const photo=content.photos[key];if(photo?.src){image.src=photo.src;image.alt=photo.alt||'';if(photo.position&&Number.isFinite(photo.position.x)&&Number.isFinite(photo.position.y)){image.style.objectPosition=photo.position.x+'% '+photo.position.y+'%';}}});});
   (async()=>{
     let testimonials=[
       {quote:'Un gran profesional, me ha estado tratando un problema de fascitis que llevaba tiempo arrastrando y en pocas sesiones he notado una gran mejoría... sin duda volveré la vez que lo necesite. GRACIAS 💪',author:'Miguel Ángel Pamies'},

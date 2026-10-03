@@ -25,6 +25,18 @@
     "aboutMobile": {
       "src": "hero.jpg",
       "alt": "Jorge Planelles Ricarte tratando a un paciente en consulta"
+    },
+    "method": {
+      "src": "hero.jpg",
+      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta"
+    },
+    "movement": {
+      "src": "hero.jpg",
+      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta"
+    },
+    "training": {
+      "src": "hero.jpg",
+      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta"
     }
   }
 }

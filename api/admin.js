@@ -38,7 +38,23 @@ module.exports = async (req, res) => {
     if (!attempt || attempt.until < now) { attempt = { count: 0, until: now + 15 * 60 * 1000 }; attempts.set(ip, attempt); }
     if (++attempt.count > 5) { res.setHeader('Retry-After', '900'); return send(429, { error: 'Demasiados intentos. Inténtalo dentro de 15 minutos.' }); }
     let body;
-    try { body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {}; } catch { return send(400, { error: 'Solicitud inválida.' }); }
+    try {
+      let raw = req.body;
+      if (raw === undefined || raw === null) {
+        const chunks = []; let size = 0;
+        for await (const chunk of req) {
+          const bytes = Buffer.from(chunk); size += bytes.length;
+          if (size > 8192) return send(413, { error: 'Solicitud demasiado grande.' });
+          chunks.push(bytes);
+        }
+        raw = Buffer.concat(chunks);
+      }
+      body = typeof raw === 'string' || Buffer.isBuffer(raw) || raw instanceof Uint8Array
+        ? JSON.parse(raw.toString()) : raw;
+      if (!body || typeof body !== 'object' || Array.isArray(body) || typeof body.username !== 'string' || typeof body.password !== 'string') {
+        return send(400, { error: 'No se han recibido correctamente los datos del formulario.' });
+      }
+    } catch { return send(400, { error: 'No se ha podido leer el formulario de acceso.' }); }
     if (typeof body.username !== 'string' || typeof body.password !== 'string' || body.password.length > 1024 || !equal(body.username, username()) || !equal(body.password, setting('ADMIN_PASSWORD'))) return send(401, { error: 'Usuario o contraseña incorrectos.' });
     attempts.delete(ip);
     const payload = Buffer.from(JSON.stringify({ user: username(), exp: now + 8 * 60 * 60 * 1000, nonce: crypto.randomBytes(16).toString('hex') })).toString('base64url');

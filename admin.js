@@ -16,7 +16,22 @@ let generation=0;
 async function load(){const request=++generation;const refresh=document.querySelector('#refresh');refresh.disabled=true;status.textContent='Consultando estadísticas…';reports.replaceChildren();summaryPanel.replaceChildren();try{const data=await api('stats&days='+document.querySelector('#days').value);if(request!==generation)return;const available=Object.entries(data.reports).filter(([,r])=>!r.error&&Array.isArray(r.data)&&r.data.some(x=>metric(x)>0));if(!available.length){status.textContent='Todavía no hay actividad disponible para este periodo.';return;}const daily=data.reports.day?.data;if(Array.isArray(daily)&&daily.some(r=>metric(r)>0)){stat('Vistas de páginas',number(daily.reduce((s,r)=>s+metric(r),0)),'En el periodo seleccionado');const peak=[...daily].sort((a,b)=>Number(b.visitors||0)-Number(a.visitors||0))[0];stat('Mayor alcance diario',number(peak.visitors||0),'Visitantes · '+label('day',peak));}const devices=data.reports.deviceType?.data;if(Array.isArray(devices)&&devices.some(r=>metric(r)>0)){const total=devices.reduce((s,r)=>s+metric(r),0),mobile=devices.filter(r=>String(r.deviceType).toLowerCase()==='mobile').reduce((s,r)=>s+metric(r),0);stat('Visitas desde móvil',Math.round(mobile/total*100)+' %','Porcentaje de vistas de páginas');}for(const [key,report]of available){const rows=[...report.data].filter(r=>key==='day'||metric(r)>0).sort(key==='day'?(a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp):(a,b)=>metric(b)-metric(a));const card=cell('section','');card.className='card'+(key==='day'?' wide':'');card.append(cell('h2',names[key]||key));const caption=cell('p',key==='day'?'Vistas y visitantes de cada día.':'Distribución de las vistas de páginas.');caption.className='caption';card.append(caption,key==='day'?trend(rows):bars(key,rows),table(key,rows));reports.append(card);}status.textContent='Actualizado a las '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})+' · '+new Date(data.since).toLocaleDateString('es-ES')+' — '+new Date(data.until).toLocaleDateString('es-ES');}catch(error){if(request!==generation)return;if(error.code===401){showLogin();message.textContent='La sesión ha caducado.';}else status.textContent=error.message;}finally{if(request===generation)refresh.disabled=false;}}
 async function enter(){login.hidden=true;dashboard.hidden=false;await Promise.all([load(),loadEditor()]);}
 form.addEventListener('submit',async event=>{event.preventDefault();const button=form.querySelector('button');button.disabled=true;message.textContent='';try{const fields=new FormData(form);await api('login',{username:fields.get('username'),password:fields.get('password')});form.reset();await enter();}catch(error){message.textContent=error.message;}finally{button.disabled=false;}});
-document.querySelector('#logout').addEventListener('click',async()=>{try{await api('logout',{});++generation;showLogin();}catch(error){status.textContent=error.message;}});document.querySelector('#refresh').addEventListener('click',load);document.querySelector('#days').addEventListener('change',load);api('session').then(enter).catch(error=>{if(error.code!==401)message.textContent=error.message;});
+document.querySelector('#logout').addEventListener('click',async()=>{try{await api('logout',{});++generation;showLogin();}catch(error){status.textContent=error.message;}});document.querySelector('#refresh').addEventListener('click',load);document.querySelector('#days').addEventListener('change',load);// Each entry starts a new login; never restore the previous dashboard.
+const initialLogout = api('logout', {}).catch(() => {});
+const initialLoginButton = form.querySelector('button');
+initialLoginButton.disabled = true;
+initialLogout.finally(() => { initialLoginButton.disabled = false; });
+window.addEventListener('pagehide', () => {
+  ++generation;
+  showLogin();
+  navigator.sendBeacon('/api/admin?action=logout', new Blob(['{}'], { type: 'application/json' }));
+});
+window.addEventListener('pageshow', event => {
+  if (!event.persisted) return;
+  showLogin();
+  api('logout', {}).catch(() => {});
+  form.reset();
+});
 
 const periodToggle=document.querySelector('#period-toggle'),periodOptions=document.querySelector('#period-options');
 function closePeriod(focus=false){periodOptions.hidden=true;periodToggle.setAttribute('aria-expanded','false');if(focus)periodToggle.focus();}

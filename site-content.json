@@ -23,19 +23,19 @@
       }
     },
     "aboutDesktop": {
-      "src": "media/bf53ff8b74ba299cea7aa988837b1f23.png",
+      "src": "media/ab8a72a4ee2deaa9a293848263a165ec.png",
       "alt": "Jorge Planelles Ricarte tratando a un paciente en consulta",
       "position": {
         "x": 32,
-        "y": 49
+        "y": 50
       }
     },
     "aboutMobile": {
-      "src": "media/bf53ff8b74ba299cea7aa988837b1f23.png",
+      "src": "media/ab8a72a4ee2deaa9a293848263a165ec.png",
       "alt": "Jorge Planelles Ricarte tratando a un paciente en consulta",
       "position": {
         "x": 32,
-        "y": 49
+        "y": 50
       }
     },
     "method": {

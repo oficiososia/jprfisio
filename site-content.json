@@ -55,11 +55,63 @@
       }
     },
     "training": {
-      "src": "hero.jpg",
-      "alt": "Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta",
+      "src": "media/66c561b4d49a4137ffbcafe3e289e770.webp",
+      "alt": "Jorge Planelles Ricarte supervisa un ejercicio de elevación de rodilla con banda elástica en los tobillos",
       "position": {
-        "x": 46,
-        "y": 19
+        "x": 50,
+        "y": 65
+      }
+    }
+  },
+  "trainingGallery": {
+    "photos": [
+      {
+        "src": "media/66c561b4d49a4137ffbcafe3e289e770.webp",
+        "alt": "Jorge Planelles Ricarte supervisa un ejercicio de elevación de rodilla con banda elástica en los tobillos",
+        "position": {
+          "x": 50,
+          "y": 65
+        }
+      },
+      {
+        "src": "media/99ee400a7bf827d763e4aea3be9761f2.webp",
+        "alt": "Jorge Planelles Ricarte guía la activación abdominal de un paciente durante un entrenamiento al aire libre",
+        "position": {
+          "x": 50,
+          "y": 40
+        }
+      },
+      {
+        "src": "media/45a1dc6a569d471f10b544bb25734d69.webp",
+        "alt": "Jorge Planelles Ricarte corrige la postura de un paciente en un ejercicio de equilibrio a una pierna con banda elástica",
+        "position": {
+          "x": 50,
+          "y": 66
+        }
+      },
+      {
+        "src": "media/4f695b6bfa188daafd0c2ca70ec81629.webp",
+        "alt": "Un paciente eleva la rodilla contra la resistencia de una banda elástica mientras Jorge Planelles Ricarte supervisa el movimiento",
+        "position": {
+          "x": 50,
+          "y": 57
+        }
+      },
+      {
+        "src": "media/03c1c3d48a8062c319194e61f5d5b179.webp",
+        "alt": "Jorge Planelles Ricarte guía la cadera de un paciente en un desplazamiento lateral con banda elástica",
+        "position": {
+          "x": 50,
+          "y": 45
+        }
+      }
+    ],
+    "video": {
+      "src": "media/7422936f8e8c20a9bc3448040237114a.mp4",
+      "alt": "Jorge Planelles Ricarte y un paciente corren hacia la cámara durante un entrenamiento en el parque",
+      "position": {
+        "x": 50,
+        "y": 50
       }
     }
   }

@@ -32,165 +32,275 @@
     });
   }
 
+  const expandIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>';
+  const openIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>';
+  const pad = value => String(value).padStart(2, '0');
+
+  // Training gallery: swipeable main photo, the next two items beside it and a full-screen viewer.
   function createTrainingCarousel(content) {
     const root = document.querySelector('[data-training-carousel]');
-    if (!root) return;
+    if (!root || root.dataset.ready) return;
     const gallery = content.trainingGallery;
     const photos = (Array.isArray(gallery?.photos) ? gallery.photos.slice(0, 5) : [content.photos?.training])
       .filter(item => item && imagePath.test(item.src));
     const items = photos.map(item => ({ ...item, type: 'image' }));
     if (gallery?.video && videoPath.test(gallery.video.src)) items.push({ ...gallery.video, type: 'video' });
-    if (!items.length) { root.dataset.mediaError = 'Todavía no hay imágenes publicadas'; return; }
+    const main = root.querySelector('[data-training-stage]');
+    if (!items.length) { main.dataset.mediaError = 'Todavía no hay imágenes publicadas'; return; }
+    root.dataset.ready = 'true';
 
-    const stage = root.querySelector('[data-training-stage]');
-    const controls = root.querySelector('[data-training-controls]');
-    const dots = root.querySelector('[data-training-dots]');
+    const total = items.length;
+    const side = root.querySelector('[data-training-side]');
     const count = root.querySelector('[data-training-count]');
-    const toggle = root.querySelector('[data-training-toggle]');
+    const prev = root.querySelector('[data-training-prev]');
+    const next = root.querySelector('[data-training-next]');
+    const viewer = root.querySelector('[data-training-viewer]');
+    const track = viewer.querySelector('[data-viewer-track]');
+    const thumbs = viewer.querySelector('[data-viewer-thumbs]');
+    const viewerCount = viewer.querySelector('[data-viewer-count]');
+    const viewerPrev = viewer.querySelector('[data-viewer-prev]');
+    const viewerNext = viewer.querySelector('[data-viewer-next]');
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let index = 0, timer, watchdog, frame, inView = !('IntersectionObserver' in window);
-    let paused = motion.matches;
-    const failed = new Set();
-    const slides = items.map((item, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'training-slide';
-      slide.setAttribute('role', 'group');
-      slide.setAttribute('aria-roledescription', 'diapositiva');
-      slide.setAttribute('aria-label', `${i + 1} de ${items.length}`);
+    const canOpen = typeof viewer.showModal === 'function';
+    let index = 0, viewerIndex = 0, frame = 0, viewerFrame = 0, opener = null, viewerItems = null;
+    let near = !('IntersectionObserver' in window), inView = near;
+    const describe = item => item.alt || (item.type === 'video' ? 'Vídeo de entrenamiento' : 'Entrenamiento adaptado');
+    const kind = item => item.type === 'video' ? 'vídeo' : 'foto';
+    const clamp = value => Math.max(0, Math.min(total - 1, value));
+    const behavior = () => motion.matches ? 'auto' : 'smooth';
+
+    // Media elements get their src only when needed; `still` shows the first video frame without playing.
+    function createMedia(item, still = false) {
       const media = document.createElement(item.type === 'video' ? 'video' : 'img');
+      media.className = 'tg-media';
       if (item.type === 'video') {
         media.muted = true;
         media.defaultMuted = true;
         media.playsInline = true;
+        media.setAttribute('playsinline', '');
         media.preload = 'none';
-        if (photos[0]) media.poster = photos[0].src;
-        media.classList.add('media-ready');
-        media.setAttribute('aria-label', item.alt || 'Entrenamiento adaptado');
-        media.addEventListener('ended', finishVideo);
-        media.addEventListener('timeupdate', checkVideoTime);
+        media.setAttribute('aria-label', describe(item));
+        // Only the first two seconds are shown, on a loop.
+        media.addEventListener('timeupdate', () => { if (media.currentTime >= 2) media.currentTime = 0; });
+        media.addEventListener('loadeddata', ready);
+        media.dataset.src = still ? item.src + '#t=0.001' : item.src;
       } else {
-        media.alt = item.alt || 'Entrenamiento adaptado';
+        media.alt = describe(item);
         media.decoding = 'async';
-        media.addEventListener('load', () => media.classList.add('media-ready'));
+        media.draggable = false;
+        media.addEventListener('load', ready);
+        media.dataset.src = item.src;
       }
+      function ready() { media.classList.add('media-ready'); media.parentElement?.removeAttribute('data-media-error'); }
       media.addEventListener('error', () => {
-        failed.add(i);
-        if (i === index) {
-          if (failed.size < items.length) show(nextIndex(1));
-          else { stop(); root.dataset.mediaError = 'No se han podido cargar las imágenes'; }
-        }
+        media.classList.remove('media-ready');
+        if (media.parentElement) media.parentElement.dataset.mediaError = item.type === 'video' ? 'Vídeo no disponible' : 'Imagen no disponible';
       });
-      position(media, item);
-      slide.append(media);
-      stage.append(slide);
-      const dot = document.createElement('button');
-      dot.type = 'button';
-      dot.setAttribute('aria-label', item.type === 'video' ? 'Ver vídeo de entrenamiento' : `Ver foto ${i + 1}`);
-      dot.addEventListener('click', () => { paused = true; show(i); });
-      dots.append(dot);
-      return { slide, media, dot };
+      const { x = 50, y = 50 } = item.position || {};
+      media.style.objectPosition = `${x}% ${y}%`;
+      return media;
+    }
+    function load(media, full = false) {
+      if (!media || media.hasAttribute('src')) return;
+      if (media.tagName === 'VIDEO') media.preload = full ? 'auto' : 'metadata';
+      media.src = media.dataset.src;
+    }
+
+    const slides = items.map((item, i) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'tg-main-photo';
+      button.tabIndex = i === 0 ? 0 : -1;
+      button.setAttribute('aria-label', `Ampliar ${kind(item)} ${i + 1} de ${total}: ${describe(item)}`);
+      const media = createMedia(item);
+      const expand = document.createElement('span');
+      expand.className = 'tg-expand';
+      expand.innerHTML = expandIcon;
+      const label = document.createElement('span');
+      label.className = 'tg-photo-label';
+      label.setAttribute('aria-hidden', 'true');
+      const number = document.createElement('span');
+      number.textContent = `${pad(i + 1)} / ${pad(total)}`;
+      label.append('Entrenamientos', number);
+      button.append(media, expand, label);
+      button.addEventListener('click', () => openViewer(i, button));
+      main.append(button);
+      return media;
     });
 
-    function canPlay() { return !paused && inView && !document.hidden && !failed.has(index); }
-    function nextIndex(delta) {
-      let next = index;
-      for (let step = 0; step < items.length; step++) {
-        next = (next + delta + items.length) % items.length;
-        if (!failed.has(next)) return next;
-      }
-      return index;
-    }
-    function stop() {
-      clearTimeout(timer); clearTimeout(watchdog); cancelAnimationFrame(frame);
-      slides.forEach(({ media }) => { if (media.tagName === 'VIDEO') media.pause(); });
-    }
-    function finishVideo() {
-      const media = slides[index].media;
-      if (media.tagName !== 'VIDEO') return;
-      media.pause();
-      if (canPlay()) {
-        const next = nextIndex(1);
-        if (next === index) media.currentTime = 0;
-        show(next);
-      }
-    }
-    function checkVideoTime() {
-      const media = slides[index].media;
-      if (media.tagName === 'VIDEO' && media.currentTime >= 2) { finishVideo(); return true; }
-      return false;
-    }
-    function watchVideo() {
-      if (!canPlay() || slides[index].media.tagName !== 'VIDEO') return;
-      if (checkVideoTime()) return;
-      if (canPlay() && slides[index].media.tagName === 'VIDEO') frame = requestAnimationFrame(watchVideo);
-    }
-    function syncPlayback() {
-      stop();
-      toggle.textContent = paused ? '▶' : 'Ⅱ';
-      toggle.setAttribute('aria-label', paused ? 'Reproducir carrusel' : 'Pausar carrusel');
-      stage.setAttribute('aria-live', paused ? 'polite' : 'off');
-      if (!canPlay()) return;
-      const media = slides[index].media;
-      if (media.tagName === 'VIDEO') {
-        if (media.currentTime >= 2 || media.ended) media.currentTime = 0;
-        const active = index;
-        // Skip unavailable/stalled video without leaving the carousel stuck.
-        watchdog = setTimeout(() => { if (active === index && canPlay()) show(nextIndex(1)); }, 8000);
-        media.play().then(() => {
-          if (active !== index || !canPlay()) { media.pause(); return; }
-          media.classList.add('media-ready');
-          frame = requestAnimationFrame(watchVideo);
-        }).catch(() => {
-          if (active !== index || !canPlay()) return;
-          paused = true;
-          syncPlayback();
-        });
-      } else if (items.length > 1) timer = setTimeout(() => show(nextIndex(1)), 4000);
-    }
-    function show(next) {
-      stop();
-      if (next !== index && slides[index].media.tagName === 'VIDEO') slides[index].media.currentTime = 0;
-      index = next;
-      slides.forEach(({ slide, dot }, i) => {
-        slide.hidden = i !== index;
-        dot.setAttribute('aria-current', String(i === index));
+    const sideButtons = total < 3 ? [] : [1, 2].map(() => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.addEventListener('click', () => openViewer(Number(button.dataset.index), button));
+      side.append(button);
+      return button;
+    });
+    if (total < 3) root.classList.add('tg-single');
+
+    function renderSide() {
+      sideButtons.forEach((button, k) => {
+        const i = (index + k + 1) % total;
+        if (button.dataset.index === String(i)) return;
+        button.dataset.index = String(i);
+        button.removeAttribute('data-media-error');
+        const media = createMedia(items[i], true);
+        button.replaceChildren(media);
+        if (k === 1) {
+          const all = document.createElement('span');
+          all.className = 'tg-all-label';
+          all.innerHTML = 'Ver galería ' + openIcon;
+          button.append(all);
+          button.setAttribute('aria-label', `Ver galería completa desde ${kind(items[i])} ${i + 1}`);
+        } else button.setAttribute('aria-label', `Ampliar ${kind(items[i])} ${i + 1} de ${total}: ${describe(items[i])}`);
+        if (near) load(media);
       });
-      const media = slides[index].media;
-      if (!media.hasAttribute('src')) media.src = items[index].src;
-      // Warm only the next photo; the video is not fetched until it is selected.
-      const nextPhoto = nextIndex(1);
-      if (items[nextPhoto].type === 'image' && !slides[nextPhoto].media.hasAttribute('src')) slides[nextPhoto].media.src = items[nextPhoto].src;
-      count.textContent = `${index + 1} / ${items.length}`;
-      syncPlayback();
     }
-    root.querySelector('[data-training-prev]').addEventListener('click', () => { paused = true; show(nextIndex(-1)); });
-    root.querySelector('[data-training-next]').addEventListener('click', () => { paused = true; show(nextIndex(1)); });
-    toggle.addEventListener('click', () => { paused = !paused; syncPlayback(); });
-    root.addEventListener('keydown', event => {
-      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-      event.preventDefault(); paused = true; show(nextIndex(event.key === 'ArrowRight' ? 1 : -1));
-    });
-    root.addEventListener('focusin', event => {
-      if (event.target !== toggle) { paused = true; syncPlayback(); }
-    });
-    let touch;
-    stage.addEventListener('touchstart', event => { touch = event.touches[0]; }, { passive: true });
-    stage.addEventListener('touchend', event => {
-      if (!touch) return;
-      const dx = event.changedTouches[0].clientX - touch.clientX;
-      const dy = event.changedTouches[0].clientY - touch.clientY;
-      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) { paused = true; show(nextIndex(dx < 0 ? 1 : -1)); }
-      touch = null;
+    // Load the visible item, its neighbours and the side photos once the section is close.
+    function warm() {
+      if (!near) return;
+      load(slides[index], true);
+      load(slides[index + 1]);
+      load(slides[index - 1]);
+      sideButtons.forEach(button => load(button.querySelector('.tg-media')));
+    }
+    function playIf(media, active) {
+      if (media.tagName !== 'VIDEO') return;
+      if (active && !motion.matches) {
+        load(media, true);
+        media.play().catch(() => {});
+      } else if (!media.paused) media.pause();
+    }
+    function syncVideo() {
+      const open = viewer.open;
+      slides.forEach((media, i) => playIf(media, !open && i === index && inView && !document.hidden));
+      viewerItems?.forEach(({ media }, i) => playIf(media, open && i === viewerIndex && !document.hidden));
+    }
+    function select(i) {
+      index = i;
+      slides.forEach((media, k) => { media.parentElement.tabIndex = k === i ? 0 : -1; });
+      count.textContent = `${i + 1} / ${total}`;
+      prev.disabled = i === 0;
+      next.disabled = i === total - 1;
+      renderSide();
+      warm();
+      syncVideo();
+    }
+    function go(i, smooth = true) {
+      main.scrollTo({ left: clamp(i) * main.clientWidth, behavior: smooth ? behavior() : 'auto' });
+    }
+    main.addEventListener('scroll', () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        if (!main.clientWidth) return;
+        const i = clamp(Math.round(main.scrollLeft / main.clientWidth));
+        if (i !== index) select(i);
+      });
     }, { passive: true });
-    document.addEventListener('visibilitychange', syncPlayback);
-    window.addEventListener('pagehide', stop);
-    window.addEventListener('pageshow', syncPlayback);
-    motion.addEventListener('change', () => { if (motion.matches) { paused = true; syncPlayback(); } });
-    if ('IntersectionObserver' in window) new IntersectionObserver(entries => {
-      inView = entries[0].isIntersecting; syncPlayback();
-    }, { threshold: .15 }).observe(root);
-    controls.hidden = items.length < 2 && items[0].type !== 'video';
-    show(0);
+    main.addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      const i = clamp(index + (event.key === 'ArrowRight' ? 1 : -1));
+      go(i);
+      slides[i].parentElement.focus({ preventScroll: true });
+    });
+    prev.addEventListener('click', () => go(index - 1));
+    next.addEventListener('click', () => go(index + 1));
+    root.querySelector('[data-training-open]').addEventListener('click', event => openViewer(index, event.currentTarget));
+    // Keep the current photo aligned when the layout width changes.
+    if ('ResizeObserver' in window) new ResizeObserver(() => go(index, false)).observe(main);
+
+    function buildViewer() {
+      viewerItems = items.map((item, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'tg-slide';
+        slide.setAttribute('role', 'group');
+        slide.setAttribute('aria-roledescription', 'diapositiva');
+        slide.setAttribute('aria-label', `${i + 1} de ${total}`);
+        const media = createMedia(item);
+        media.style.objectPosition = '50% 50%';
+        if (item.type === 'video') media.controls = true;
+        slide.append(media);
+        track.append(slide);
+        const thumb = document.createElement('button');
+        thumb.type = 'button';
+        thumb.setAttribute('aria-label', `${item.type === 'video' ? 'Vídeo' : 'Foto'} ${i + 1}`);
+        const preview = createMedia(item, true);
+        if (preview.tagName === 'IMG') preview.alt = ''; else preview.setAttribute('aria-hidden', 'true');
+        thumb.append(preview);
+        thumb.addEventListener('click', () => viewerGo(i));
+        thumbs.append(thumb);
+        return { slide, media, thumb, preview };
+      });
+      track.addEventListener('scroll', () => {
+        if (viewerFrame) return;
+        viewerFrame = requestAnimationFrame(() => {
+          viewerFrame = 0;
+          if (!track.clientWidth) return;
+          const i = clamp(Math.round(track.scrollLeft / track.clientWidth));
+          if (i !== viewerIndex) viewerSelect(i);
+        });
+      }, { passive: true });
+    }
+    function viewerSelect(i) {
+      viewerIndex = i;
+      viewerItems.forEach(({ slide, thumb, preview }, k) => {
+        slide.setAttribute('aria-hidden', String(k !== i));
+        thumb.setAttribute('aria-pressed', String(k === i));
+        load(preview);
+      });
+      [i - 1, i, i + 1].forEach(k => load(viewerItems[k]?.media, k === i));
+      viewerCount.replaceChildren(pad(i + 1) + ' ');
+      const of = document.createElement('span');
+      of.textContent = `/ ${pad(total)}`;
+      viewerCount.append(of);
+      viewerPrev.disabled = i === 0;
+      viewerNext.disabled = i === total - 1;
+      viewerItems[i].thumb.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      syncVideo();
+    }
+    function viewerGo(i) {
+      track.scrollTo({ left: clamp(i) * track.clientWidth, behavior: behavior() });
+    }
+    function openViewer(i, trigger) {
+      if (!canOpen || viewer.open) return;
+      opener = trigger;
+      if (!viewerItems) buildViewer();
+      viewer.showModal();
+      track.scrollTo({ left: i * track.clientWidth, behavior: 'auto' });
+      viewerSelect(i);
+    }
+    viewerPrev.addEventListener('click', () => viewerGo(viewerIndex - 1));
+    viewerNext.addEventListener('click', () => viewerGo(viewerIndex + 1));
+    viewer.querySelector('[data-viewer-close]').addEventListener('click', () => viewer.close());
+    viewer.addEventListener('click', event => { if (event.target === viewer) viewer.close(); });
+    viewer.addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(event.key) || event.target.tagName === 'VIDEO') return;
+      event.preventDefault();
+      viewerGo(viewerIndex + (event.key === 'ArrowRight' ? 1 : -1));
+    });
+    viewer.addEventListener('close', () => {
+      // Return to the photo last seen in the viewer and give focus back to where it was opened.
+      go(viewerIndex, false);
+      select(viewerIndex);
+      const target = opener?.classList.contains('tg-main-photo') ? slides[viewerIndex].parentElement : opener;
+      target?.focus({ preventScroll: true });
+      opener = null;
+    });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting) && !near) { near = true; warm(); }
+      }, { rootMargin: '600px 0px' }).observe(root);
+      new IntersectionObserver(entries => { inView = entries[0].isIntersecting; syncVideo(); }, { threshold: .15 }).observe(root);
+    }
+    document.addEventListener('visibilitychange', syncVideo);
+    motion.addEventListener?.('change', syncVideo);
+    const controls = root.querySelector('[data-training-controls]');
+    [prev, next, count].forEach(element => { element.hidden = total < 2; });
+    controls.hidden = false;
+    if (!canOpen) root.querySelector('[data-training-open]').hidden = true;
+    select(0);
   }
 
   document.addEventListener('DOMContentLoaded', async () => {

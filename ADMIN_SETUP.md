@@ -19,9 +19,9 @@ Documentación: https://vercel.com/docs/analytics/web-analytics-api
 
 ## Fotos y carrusel de entrenamiento
 
-En **Fotos y vídeo** se editan la portada, Sobre mí, Metodología y el carrusel de Entrenamiento. El carrusel tiene cinco posiciones de foto y una de vídeo; las posiciones vacías se omiten. Cada foto permanece cuatro segundos. Del vídeo MP4/WebM se reproducen los primeros dos segundos, sin sonido. El vídeo debe durar al menos dos segundos y pesar como máximo 3 MB; las fotos se optimizan a WebP (hasta 2 MB).
+En **Fotos y vídeo** se editan la portada, Sobre mí, Metodología y la galería de Entrenamiento. La galería tiene cinco posiciones de foto y una de vídeo; las posiciones vacías se omiten. La primera foto es la principal y se desliza (o se cambia con las flechas) hacia las siguientes; en escritorio, las dos siguientes aparecen a su lado. Pulsar cualquier foto o «Ver galería» abre la galería ampliada con miniaturas, que muestra cada foto completa. No hay avance automático. Del vídeo MP4/WebM se repiten los primeros dos segundos, sin sonido, mientras está en pantalla. El vídeo debe durar al menos dos segundos y pesar como máximo 3 MB; las fotos se optimizan a WebP (hasta 2 MB).
 
-Las fotos existentes se conservan. Hasta cargar el resto del material, Entrenamiento sigue mostrando su foto publicada. La rotación se pausa al salir de la sección, ocultar la pestaña o usar los controles; se reanuda con el botón de reproducción. Respeta la preferencia de movimiento reducido.
+El encuadre (posición horizontal y vertical) se aplica a la foto principal y a las laterales; la vista previa del panel usa la proporción de la foto principal en ordenador y en móvil. El vídeo se pausa al salir de la sección, al ocultar la pestaña o al abrir la galería ampliada, y no se reproduce solo si el dispositivo pide movimiento reducido.
 
 Las imágenes de la web no tienen una URL antigua provisional: se asignan al recibir `site-content.json`, solicitado sin caché. Si esa petición falla, se ofrece un botón de reintento.
 
@@ -34,4 +34,4 @@ Las imágenes de la web no tienen una URL antigua provisional: se asignan al rec
 ffmpeg -f lavfi -i testsrc2=size=320x240:rate=30 -t 4 -c:v libx264 -pix_fmt yuv420p -movflags +faststart media/11111111111111111111111111111111.mp4
 ```
 
-Abrir `/tests/browser.html`. El clip de prueba permite comprobar que la web reproduce solo dos segundos; no debe publicarse ni añadirse a Git.
+Abrir `/tests/browser.html`. El clip de prueba permite comprobar que la web repite solo los dos primeros segundos; no debe publicarse ni añadirse a Git.

@@ -7,11 +7,27 @@ const base = require('../site-content.json');
 const photo = { src: 'media/' + 'a'.repeat(32) + '.webp', alt: 'Entrenamiento', position: { x: 20, y: 80 } };
 const video = { ...photo, src: 'media/' + 'b'.repeat(32) + '.mp4' };
 
-test('existing published content retains photos and creates one real training slide', () => {
-  const value = validateContent(base);
+test('content without a gallery falls back to one real training slide', () => {
+  const { trainingGallery, ...legacy } = base;
+  const value = validateContent(legacy);
   assert.deepEqual(value.photos, base.photos);
   assert.deepEqual(value.trainingGallery.photos, [base.photos.training, null, null, null, null]);
   assert.equal(value.trainingGallery.video, null);
+});
+test('published training gallery has five photos and a video that exist and pass upload checks', () => {
+  const value = validateContent(base);
+  // Publishing from the admin must not rewrite the committed file.
+  assert.deepEqual(value, base);
+  const { photos, video } = value.trainingGallery;
+  assert.equal(photos.filter(Boolean).length, 5);
+  assert.ok(video);
+  assert.deepEqual(base.photos.training, photos[0]);
+  for (const item of [...photos, video]) {
+    const bytes = fs.readFileSync(item.src);
+    const type = item.src.endsWith('.mp4') ? 'video/mp4' : 'image/webp';
+    assert.ok(item.alt.trim(), item.src);
+    assert.doesNotThrow(() => validateUpload({ type, data: bytes.toString('base64') }), item.src);
+  }
 });
 test('five photos and one video survive a publish round trip with crop positions', () => {
   const value = validateContent({ ...base, trainingGallery: { photos: Array(5).fill(photo), video } });

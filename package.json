@@ -1,0 +1,19 @@
+{
+  "name": "jprfisio",
+  "version": "1.0.0",
+  "description": "Jorge Planelles Ricarte - Fisioterapeuta en Crevillent, Alicante",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Static site - no build needed'"
+  },
+  "keywords": [
+    "fisioterapia",
+    "crevillent",
+    "alicante"
+  ],
+  "author": "Jorge Planelles Ricarte",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}

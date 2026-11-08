@@ -27,7 +27,7 @@
   <title>Jorge Planelles Ricarte — Fisioterapeuta en Crevillent, Alicante</title>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
-  <link rel="preload" as="image" href="hero.jpg">
+  <script src="/site-media.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -251,6 +251,25 @@
     #entrenamientos{background:var(--bone)}
     .training-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:8vw;align-items:start}
     .training-photo{height:min(38vw,500px);min-height:320px;margin-top:34px}
+    [data-site-photo],.training-slide img,.training-slide video{opacity:0}
+    [data-site-photo].media-ready,.training-slide .media-ready{opacity:1;transition:opacity .3s ease}
+    .hero-photo:not(:has(.media-ready)){aspect-ratio:1673/1900}
+    [data-media-error]:after{content:attr(data-media-error);position:absolute;inset:0;display:grid;place-items:center;padding:25px;text-align:center;color:var(--muted);font-size:13px;pointer-events:none}
+    .media-retry{position:absolute;z-index:2;left:50%;top:60%;transform:translateX(-50%);padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--bone);cursor:pointer}
+    .training-stage,.training-slide{position:absolute;inset:0}
+    .training-slide[hidden],.training-controls[hidden]{display:none}
+    .training-slide video{width:100%;height:100%;object-fit:cover}
+    .training-stage{touch-action:pan-y}
+    .training-controls{position:absolute;z-index:2;bottom:14px;left:14px;right:14px;display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 8px;border-radius:12px;background:rgba(35,28,22,.78);color:#fff}
+    .training-controls button{display:grid;place-items:center;flex-shrink:0;width:36px;height:40px;border:0;border-radius:7px;color:inherit;background:transparent;cursor:pointer;font-size:18px}
+    .training-controls button:hover{background:#ffffff24}
+    .training-controls button:focus-visible{outline:2px solid white;outline-offset:1px}
+    .training-dots{display:flex;justify-content:center;flex:1;min-width:0}
+    .training-dots button{width:24px;font-size:0}
+    .training-dots button:before{content:"";width:6px;height:6px;border-radius:50%;background:#ffffff70}
+    .training-dots button[aria-current=true]:before{background:#fff;transform:scale(1.35)}
+    .training-count{font-size:11px;white-space:nowrap;font-variant-numeric:tabular-nums;margin:0 4px}
+    @media(max-width:380px){.training-controls{left:8px;right:8px;gap:2px;padding:4px}.training-dots button{width:21px}.training-controls>button{width:30px}.training-count{margin:0 2px}}
     .training-list{border-top:1px solid var(--line);margin-top:80px}
     .training-item{display:grid;grid-template-columns:55px 1fr;padding:28px 0;border-bottom:1px solid var(--line)}
     .training-item b{font-size:12px}.training-item h3{font-size:25px;margin-bottom:7px}.training-item p{margin:0;color:var(--muted);font-size:15px}
@@ -416,7 +435,7 @@
     <div class="actions"><a class="btn dark" href="https://wa.me/34670028629?text=Hola%20Jorge%2C%20%C2%BFtendr%C3%ADas%20disponibilidad%20para%20" target="_blank" rel="noopener">Reservar cita</a><a class="text-link" href="#metodologia">Conocer mi forma de trabajar →</a></div>
   </div>
   <div class="photo hero-photo reveal">
-    <img data-site-photo="hero" src="hero.jpg" alt="Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta" width="1673" height="1900" decoding="async" fetchpriority="high">
+    <img data-site-photo="hero" alt="Jorge Planelles Ricarte, fisioterapeuta en Crevillent, realizando tratamiento manual en consulta" width="1673" height="1900" decoding="async" fetchpriority="high">
     <span class="photo-note">Consulta · Movimiento · Precisión</span>
   </div>
 </section>
@@ -429,14 +448,14 @@
   <div class="wrap about-grid">
     <div class="about-media reveal">
       <figure class="photo about-photo">
-        <img data-site-photo="aboutDesktop" src="hero.jpg" alt="Jorge Planelles Ricarte tratando a un paciente en consulta" width="1673" height="1900" loading="lazy" decoding="async">
+        <img data-site-photo="aboutDesktop" alt="Jorge Planelles Ricarte tratando a un paciente en consulta" width="1673" height="1900" loading="lazy" decoding="async">
       </figure>
     </div>
     <div class="about-copy reveal">
       <div class="section-id">01 — Sobre mí</div>
       <h2><span class="about-heading-line">Hola, soy Jorge</span><span class="about-heading-line">Planelles Ricarte,</span><span class="about-heading-line about-heading-light">fisioterapeuta.</span></h2>
       <figure class="photo about-photo about-photo-mobile">
-        <img data-site-photo="aboutMobile" src="hero.jpg" alt="Jorge Planelles Ricarte tratando a un paciente en consulta" width="1673" height="1900" loading="lazy" decoding="async">
+        <img data-site-photo="aboutMobile" alt="Jorge Planelles Ricarte tratando a un paciente en consulta" width="1673" height="1900" loading="lazy" decoding="async">
       </figure>
       <div class="bio">
         <p>Desde que decidí estudiar fisioterapia tuve claro que no quería limitarme a tratar el dolor. Quería comprender qué había detrás de él.</p>
@@ -484,12 +503,12 @@
       <div class="step"><b>03</b><div><h3>Tratamiento personalizado</h3><p>Selección de las herramientas terapéuticas más adecuadas, adaptadas a las necesidades y objetivos individuales de cada persona.</p></div></div>
       <div class="step"><b>04</b><div><h3>Seguimiento y autonomía</h3><p>Valoración continua de la evolución para adaptar el tratamiento y proporcionar herramientas que favorezcan una mayor autonomía en las actividades de la vida diaria.</p></div></div>
     </div>
-    <div class="photo method-photo reveal"><img data-site-photo="method" src="hero.jpg" alt="Jorge Planelles Ricarte en consulta · Método · ejercicio supervisado" width="1673" height="1900" loading="lazy" decoding="async"></div>
+    <div class="photo method-photo reveal"><img data-site-photo="method" alt="Jorge Planelles Ricarte en consulta · Método · ejercicio supervisado" width="1673" height="1900" loading="lazy" decoding="async"></div>
   </div>
 </section>
 
 <div class="movement">
-  <div class="photo movement-photo reveal"><img data-site-photo="movement" src="hero.jpg" alt="Jorge Planelles Ricarte en consulta · Movimiento" width="1673" height="1900" loading="lazy" decoding="async"></div>
+  <div class="photo movement-photo reveal"><img data-site-photo="movement" alt="Jorge Planelles Ricarte en consulta · Movimiento" width="1673" height="1900" loading="lazy" decoding="async"></div>
 </div>
 
 <section id="entrenamientos">
@@ -497,7 +516,16 @@
     <div class="training-copy reveal">
       <div class="section-id">03 — Entrenamientos</div>
       <h2><span class="training-title-line">Entrenar con sentido,</span> <span class="training-title-line">avanzar con seguridad.</span></h2>
-      <div class="photo training-photo"><img data-site-photo="training" src="hero.jpg" alt="Jorge Planelles Ricarte en consulta · Entrenamiento adaptado" width="1673" height="1900" loading="lazy" decoding="async"></div>
+      <div class="photo training-photo" data-training-carousel role="region" aria-roledescription="carrusel" aria-label="Fotos y vídeo de entrenamiento">
+        <div class="training-stage" data-training-stage></div>
+        <div class="training-controls" data-training-controls hidden>
+          <button type="button" data-training-prev aria-label="Imagen anterior">←</button>
+          <div class="training-dots" data-training-dots></div>
+          <span class="training-count" data-training-count></span>
+          <button type="button" data-training-toggle aria-label="Pausar carrusel">Ⅱ</button>
+          <button type="button" data-training-next aria-label="Imagen siguiente">→</button>
+        </div>
+      </div>
     </div>
     <div class="training-list reveal">
       <div class="training-item"><b>01</b><div><h3>Conciencia Corporal</h3><p>Es fundamental comprender cómo se organiza nuestro cuerpo y cómo se relaciona con el espacio. La conciencia corporal es la base para desarrollar un movimiento más controlado y eficiente.</p></div></div>
@@ -586,8 +614,7 @@
     menuToggle.setAttribute('aria-expanded',String(isOpen));
   });
   mobilePanel?.querySelectorAll('a').forEach(link=>link.addEventListener('click',closeMenu));
-  const siteContentPromise=fetch('/site-content.json').then(response=>response.ok?response.json():null).catch(()=>null);
-  siteContentPromise.then(content=>{if(!content?.photos)return;document.querySelectorAll('[data-site-photo]').forEach(image=>{const key={aboutMobile:'aboutDesktop',movement:'method'}[image.dataset.sitePhoto]||image.dataset.sitePhoto;const photo=content.photos[key];if(photo?.src){image.src=photo.src;image.alt=photo.alt||'';if(photo.position&&Number.isFinite(photo.position.x)&&Number.isFinite(photo.position.y)){image.style.objectPosition=photo.position.x+'% '+photo.position.y+'%';}}});});
+  const siteContentPromise=window.siteContentReady || Promise.resolve(null);
   (async()=>{
     let testimonials=[
       {quote:'Un gran profesional, me ha estado tratando un problema de fascitis que llevaba tiempo arrastrando y en pocas sesiones he notado una gran mejoría... sin duda volveré la vez que lo necesite. GRACIAS 💪',author:'Miguel Ángel Pamies'},

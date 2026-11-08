@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const { validateContent, validateUpload } = require('../lib/site-content');
 const cookieName = '__Host-jpr_admin';
 function setting(name) {
   let value = (process.env[name] || '').trim();
@@ -37,13 +38,6 @@ async function github(path, options={}) {
   if(!response.ok){const error=new Error(response.status===409||response.status===422?'El contenido ha cambiado. Recarga antes de publicar.':'No se ha podido acceder a GitHub. Revisa el token y sus permisos de escritura.');error.status=response.status===409||response.status===422?409:502;throw error;}
   return data;
 }
-function validateContent(value){
-  if(!value||!Array.isArray(value.testimonials)||value.testimonials.length<1||value.testimonials.length>20)throw new Error('Incluye entre 1 y 20 testimonios.');
-  const testimonials=value.testimonials.map(item=>{if(typeof item?.author!=='string'||!item.author.trim()||item.author.length>120||typeof item.quote!=='string'||!item.quote.trim()||item.quote.length>2500)throw new Error('Revisa el nombre y el texto de cada testimonio.');return {author:item.author.trim(),quote:item.quote.trim()};});
-  const photos={};
-  for(const key of ['hero','aboutDesktop','aboutMobile','method','movement','training']){const item=value.photos?.[key]||(['method','movement','training'].includes(key)?value.photos?.hero:null);if(!item||typeof item.src!=='string'||!/^((hero\.jpg)|(media\/[a-f0-9]{32}\.(webp|png|jpg)))$/.test(item.src)||typeof item.alt!=='string'||item.alt.length>300)throw new Error('Revisa las imágenes y sus descripciones.');const position=item.position||{x:key.startsWith('about')?27:50,y:50};if(!Number.isFinite(position.x)||!Number.isFinite(position.y)||position.x<0||position.x>100||position.y<0||position.y>100)throw new Error('Revisa el encuadre de las imágenes.');photos[key]={src:item.src,alt:item.alt.trim(),position:{x:position.x,y:position.y}};}
-  return {testimonials,photos};
-}
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'private, no-store');
@@ -56,8 +50,8 @@ module.exports = async (req, res) => {
   if (['content','publish','upload','photo'].includes(action)) {
     if (!authenticated(req)) return send(401, {error:'Inicia sesión para editar la web.'});
     if(action==='photo'&&req.method==='GET') {
-      const path=req.query?.src;if(typeof path!=='string'||!/^media\/[a-f0-9]{32}\.(webp|png|jpg)$/.test(path))return send(400,{error:'Imagen no válida.'});
-      try{let bytes=photoCache.get(path);if(!bytes){const headers={Accept:'application/vnd.github.raw+json','X-GitHub-Api-Version':'2022-11-28'};if(setting('GITHUB_CONTENT_TOKEN'))headers.Authorization='Bearer '+setting('GITHUB_CONTENT_TOKEN');const response=await fetch('https://api.github.com/repos/oficiososia/jprfisio/contents/'+path+'?ref=main',{headers,signal:AbortSignal.timeout(18000)});if(!response.ok)return send(502,{error:'No se ha podido cargar la foto. Vuelve a intentarlo.'});bytes=Buffer.from(await response.arrayBuffer());if(!bytes.length||bytes.length>2097152)return send(400,{error:'Imagen no válida.'});if(photoCache.size>=12)photoCache.delete(photoCache.keys().next().value);photoCache.set(path,bytes);}res.setHeader('Cache-Control','private, max-age=3600');res.setHeader('Content-Type',path.endsWith('.webp')?'image/webp':path.endsWith('.png')?'image/png':'image/jpeg');return res.status(200).send(bytes);}catch(error){return send(502,{error:'No se ha podido cargar la foto. Vuelve a intentarlo.'});}
+      const path=req.query?.src;if(typeof path!=='string'||!/^media\/[a-f0-9]{32}\.(webp|png|jpg|mp4|webm)$/.test(path))return send(400,{error:'Imagen no válida.'});
+      try{let bytes=photoCache.get(path);if(!bytes){const headers={Accept:'application/vnd.github.raw+json','X-GitHub-Api-Version':'2022-11-28'};if(setting('GITHUB_CONTENT_TOKEN'))headers.Authorization='Bearer '+setting('GITHUB_CONTENT_TOKEN');const response=await fetch('https://api.github.com/repos/oficiososia/jprfisio/contents/'+path+'?ref=main',{headers,signal:AbortSignal.timeout(18000)});if(!response.ok)return send(502,{error:'No se ha podido cargar la foto. Vuelve a intentarlo.'});bytes=Buffer.from(await response.arrayBuffer());if(!bytes.length||bytes.length>3145728)return send(400,{error:'Imagen no válida.'});if(photoCache.size>=12)photoCache.delete(photoCache.keys().next().value);photoCache.set(path,bytes);}res.setHeader('Cache-Control','private, max-age=3600');res.setHeader('Content-Type',path.endsWith('.mp4')?'video/mp4':path.endsWith('.webm')?'video/webm':path.endsWith('.webp')?'image/webp':path.endsWith('.png')?'image/png':'image/jpeg');return res.status(200).send(bytes);}catch(error){return send(502,{error:'No se ha podido cargar la foto. Vuelve a intentarlo.'});}
     }
     if(action==='content'&&req.method==='GET') {
       try {const file=await github('site-content.json?ref=main');return send(200,{content:JSON.parse(Buffer.from(file.content,'base64').toString('utf8')),revision:file.sha,canPublish:Boolean(setting('GITHUB_CONTENT_TOKEN'))});}
@@ -69,14 +63,11 @@ module.exports = async (req, res) => {
     if(!(req.headers['content-type']||'').startsWith('application/json'))return send(415,{error:'Formato no permitido.'});
     if(!setting('GITHUB_CONTENT_TOKEN'))return send(503,{error:'Falta configurar GITHUB_CONTENT_TOKEN en Vercel para publicar los cambios.'});
     try {
-      const body=await readBody(req,action==='upload'?3000000:70000);
+      const body=await readBody(req,action==='upload'?4300000:70000);
       if(action==='upload') {
-        if(typeof body.data!=='string'||!['image/webp','image/png','image/jpeg'].includes(body.type)||body.data.length>2800000||!/^[A-Za-z0-9+/]+={0,2}$/.test(body.data))return send(400,{error:'Selecciona una imagen WebP, PNG o JPG de hasta 2 MB.'});
-        const bytes=Buffer.from(body.data,'base64');
-        const valid=body.type==='image/webp'?bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WEBP':body.type==='image/png'?bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])):bytes[0]===255&&bytes[1]===216&&bytes[2]===255;
-        if(!valid||bytes.length>2097152)return send(400,{error:'La imagen no tiene un formato válido o supera 2 MB.'});
-        const ext={'image/webp':'webp','image/png':'png','image/jpeg':'jpg'}[body.type];const path='media/'+crypto.randomBytes(16).toString('hex')+'.'+ext;
-        const result=await github(path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'content: upload website photo',content:bytes.toString('base64'),branch:'main'})});
+        const {bytes,ext}=validateUpload(body);
+        const path='media/'+crypto.randomBytes(16).toString('hex')+'.'+ext;
+        const result=await github(path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:'content: upload website media',content:bytes.toString('base64'),branch:'main'})});
         return send(200,{src:path,commit:result.commit.sha});
       }
       if(typeof body.revision!=='string'||!/^[a-f0-9]{40}$/.test(body.revision))return send(400,{error:'Recarga el contenido antes de publicar.'});

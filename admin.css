@@ -43,3 +43,7 @@ body:not(.login-screen) .toolbar{border-top:0;padding-top:0}
 
 /* Compact photo editor; preview proportions remain fixed. */
 .photo-card{padding:20px}.photo-card h2{font-size:18px;margin-bottom:4px}.photo-frame{width:200px;max-width:100%;margin:10px auto;max-height:none}.photo-card .crop-modes{justify-content:center;margin-bottom:8px}.photo-card>label{font-size:11px;margin-top:8px}.photo-card input[type=range]{min-height:20px;margin:4px 0 8px}.photo-card>p{font-size:10px;margin-bottom:10px}.photo-card .upload-label{margin-top:12px}.photo-card .upload-label input{margin:4px 0 8px;padding:6px}.photo-card>label:not(.upload-label) input:not([type=range]){padding:8px 10px;margin:4px 0 8px}.photo-card>button{min-height:32px;font-size:11px;padding:0 12px}@media(max-width:600px){.photo-card{padding:16px}.photo-frame{width:175px}.photo-grid{gap:14px}}
+
+.empty-media{display:grid;place-items:center;position:absolute;inset:0;font-size:12px;color:var(--muted)}
+.empty-media[hidden],.photo-preview[hidden],.training-video-preview[hidden]{display:none}
+.training-video-preview{display:block;width:100%;max-width:300px;aspect-ratio:1.23;object-fit:cover;border-radius:10px;margin:12px auto;background:var(--cream)}

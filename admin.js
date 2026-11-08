@@ -48,7 +48,7 @@ let editableContent=null,contentRevision=null,canPublish=false,dirty=false,publi
 const pendingPhotos=new Map();
 let processingPhotos=0;
 function updatePublishButtons(){document.querySelectorAll('.publish-content').forEach(button=>button.disabled=publishing||processingPhotos>0||!canPublish);}
-const photoLabels={hero:'Portada',aboutDesktop:'Sobre mí',method:'Metodología',training:'Entrenamientos'};
+const photoLabels={hero:'Portada',aboutDesktop:'Sobre mí',method:'Metodología'};
 function editorStatus(text){document.querySelectorAll('.editor-status').forEach(el=>el.textContent=text);}
 function markDirty(){dirty=true;editorStatus(canPublish?'Cambios pendientes de publicar.':'Cambios preparados. Para guardarlos en la web falta GITHUB_CONTENT_TOKEN en Vercel.');}
 function switchTab(name){document.querySelectorAll('[data-admin-tab]').forEach(button=>{const active=button.dataset.adminTab===name;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;document.querySelector('#panel-'+button.dataset.adminTab).hidden=!active;});closePeriod();}
@@ -56,11 +56,142 @@ document.querySelectorAll('[data-admin-tab]').forEach(button=>button.addEventLis
 document.querySelector('.admin-tabs').addEventListener('keydown',event=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const tabs=[...document.querySelectorAll('[data-admin-tab]')],i=tabs.indexOf(document.activeElement);const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:(i+(event.key==='ArrowRight'?1:tabs.length-1))%tabs.length;switchTab(tabs[next].dataset.adminTab);tabs[next].focus();});
 function field(title,value,tag='input'){const label=cell('label',title),input=document.createElement(tag);input.value=value;input.maxLength=tag==='textarea'?2500:300;label.append(input);return {label,input};}
 function renderReviews(){const container=document.querySelector('#review-editor');container.replaceChildren();editableContent.testimonials.forEach((review,index)=>{const card=cell('article','');card.className='card review-card';const head=cell('div','');head.className='review-head';head.append(cell('span','TESTIMONIO '+String(index+1).padStart(2,'0')));const actions=cell('div','');for(const [text,delta]of [['↑',-1],['↓',1]]){const button=cell('button',text);button.type='button';button.className='secondary';button.setAttribute('aria-label',delta<0?'Mover testimonio arriba':'Mover testimonio abajo');button.disabled=publishing||index+delta<0||index+delta>=editableContent.testimonials.length;button.onclick=()=>{[editableContent.testimonials[index],editableContent.testimonials[index+delta]]=[editableContent.testimonials[index+delta],editableContent.testimonials[index]];markDirty();renderReviews();};actions.append(button);}const remove=cell('button','Quitar');remove.type='button';remove.className='secondary';remove.disabled=publishing||editableContent.testimonials.length<=1;remove.onclick=()=>{editableContent.testimonials.splice(index,1);markDirty();renderReviews();};actions.append(remove);head.append(actions);card.append(head);const author=field('Nombre',review.author);author.input.maxLength=120;author.input.disabled=publishing;author.input.oninput=()=>{review.author=author.input.value;markDirty();};const quote=field('Testimonio',review.quote,'textarea');quote.input.rows=5;quote.input.disabled=publishing;quote.input.oninput=()=>{review.quote=quote.input.value;markDirty();};card.append(author.label,quote.label);container.append(card);});}
-function renderPhotos(){const container=document.querySelector('#photo-editor');container.replaceChildren();for(const [key,title]of Object.entries(photoLabels)){const photo=editableContent.photos[key],card=cell('article','');card.className='card photo-card';card.append(cell('h2',title));const frame=cell('div','');frame.className='photo-frame';const image=document.createElement('img');image.className='photo-preview';const photoURL=photo.src.startsWith('media/')?'/api/admin?action=photo&src='+encodeURIComponent(photo.src):'/'+photo.src;image.src=pendingPhotos.get(key)?.preview||'/'+photo.src;image.onerror=()=>{if(!pendingPhotos.has(key)&&photo.src.startsWith('media/')&&image.dataset.fallback!=='true'){image.dataset.fallback='true';image.src=photoURL;}else{editorStatus('No se ha podido cargar una foto. Vuelve a entrar o selecciona otra imagen.');}};image.alt=photo.alt;frame.append(image);card.append(frame);const defaultX=key.startsWith('about')?27:50;const position=photo.position||{x:defaultX,y:50};photo.position=position;const ratios={hero:[1673/1900,1673/1900],aboutDesktop:[.68,430/520],method:[1.05,.8],training:[1.23,.86]};const previewMode=cell('div','');previewMode.className='crop-modes';function setMode(mobile){frame.style.aspectRatio=key==='hero'?'auto':String(ratios[key][mobile?1:0]);previewMode.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mobile===String(mobile))));}for(const [text,mobile]of [['Ordenador',false],['Móvil',true]]){const mode=cell('button',text);mode.type='button';mode.className='secondary';mode.dataset.mobile=String(mobile);mode.onclick=()=>setMode(mobile);previewMode.append(mode);}card.append(previewMode);setMode(false);function updateCrop(){image.style.objectPosition=position.x+'% '+position.y+'%';}if(key==='hero'){image.style.position='static';image.style.height='auto';frame.style.aspectRatio='auto';}updateCrop();card.append(cell('p',key==='hero'?'La portada muestra la foto completa, con su proporción original.':'Ajusta la parte visible. Las medidas del hueco en la web se mantienen.'));for(const [axis,title]of [['x','Posición horizontal'],['y','Posición vertical']]){const control=cell('label',title),range=document.createElement('input');range.type='range';range.min=0;range.max=100;range.step=1;range.value=position[axis];range.disabled=publishing||key==='hero';range.oninput=()=>{position[axis]=Number(range.value);updateCrop();markDirty();};control.append(range);card.append(control);}const center=cell('button','Centrar encuadre');center.type='button';center.className='secondary';center.disabled=publishing||key==='hero';center.onclick=()=>{position.x=50;position.y=50;card.querySelectorAll('input[type=range]').forEach(el=>el.value=50);updateCrop();markDirty();};card.append(center);const label=cell('label','Elegir nueva foto');label.className='upload-label';const input=document.createElement('input');input.type='file';input.accept='image/jpeg,image/png,image/webp';input.disabled=publishing;input.onchange=async()=>{const file=input.files[0];if(!file)return;if(file.size>20*1024*1024){editorStatus('Selecciona una foto de menos de 20 MB.');return;}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){editorStatus('Selecciona una imagen JPG, PNG o WebP.');return;}input.disabled=true;processingPhotos++;updatePublishButtons();editorStatus('Preparando la foto…');try{const blob=await optimizePhoto(file),old=pendingPhotos.get(key);if(old)URL.revokeObjectURL(old.preview);const pending={blob,preview:URL.createObjectURL(blob),uploadedSrc:null};pendingPhotos.set(key,pending);delete image.dataset.fallback;image.src=pending.preview;markDirty();}catch{editorStatus('No se ha podido leer la imagen. Prueba con otra foto.');}finally{processingPhotos--;input.disabled=publishing;updatePublishButtons();}};label.append(input);card.append(label);const alt=field('Descripción de la imagen',photo.alt);alt.input.disabled=publishing;alt.input.oninput=()=>{photo.alt=alt.input.value;image.alt=photo.alt;markDirty();};card.append(alt.label,cell('p','La foto se adapta automáticamente para que la web cargue rápido.'));container.append(card);}}
+function galleryPhoto(key) {
+  return key.startsWith('training:') ? editableContent.trainingGallery.photos[Number(key.split(':')[1])] : editableContent.photos[key];
+}
+function setGalleryPhoto(key, photo) {
+  if (key.startsWith('training:')) editableContent.trainingGallery.photos[Number(key.split(':')[1])] = photo;
+  else editableContent.photos[key] = photo;
+}
+function clearPending(key) {
+  const old = pendingPhotos.get(key);
+  if (old) URL.revokeObjectURL(old.preview);
+  pendingPhotos.delete(key);
+}
+function mediaPreview(media, src, key) {
+  if (!src) { media.removeAttribute('src'); return; }
+  delete media.dataset.fallback;
+  media.onerror = () => {
+    if (!pendingPhotos.has(key) && src.startsWith('media/') && media.dataset.fallback !== 'true') {
+      media.dataset.fallback = 'true';
+      media.src = '/api/admin?action=photo&src=' + encodeURIComponent(src);
+    }
+  };
+  media.src = pendingPhotos.get(key)?.preview || '/' + src;
+}
+function renderPhotoCard(container, key, title) {
+  const isTraining = key.startsWith('training:');
+  let photo = galleryPhoto(key) || { src: '', alt: `Entrenamiento adaptado · Foto ${Number(key.split(':')[1]) + 1}`, position: { x: 50, y: 50 } };
+  const card = cell('article', ''); card.className = 'card photo-card'; card.append(cell('h2', title));
+  const frame = cell('div', ''); frame.className = 'photo-frame';
+  const image = document.createElement('img'); image.className = 'photo-preview'; image.alt = photo.alt;
+  const empty = cell('span', 'Foto pendiente'); empty.className = 'empty-media';
+  empty.hidden = !!(photo.src || pendingPhotos.has(key)); image.hidden = !empty.hidden;
+  if (pendingPhotos.has(key)) image.src = pendingPhotos.get(key).preview;
+  else mediaPreview(image, photo.src, key);
+  frame.append(image, empty); card.append(frame);
+  const position = photo.position || { x: key.startsWith('about') ? 27 : 50, y: 50 };
+  photo.position = position;
+  const ratio = isTraining ? [1.23, .86] : { hero: [1, 1], aboutDesktop: [.68, 430 / 520], method: [1.05, .8] }[key];
+  const modes = cell('div', ''); modes.className = 'crop-modes';
+  function setMode(mobile) {
+    frame.style.aspectRatio = key === 'hero' ? 'auto' : String(ratio[mobile ? 1 : 0]);
+    modes.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mobile === String(mobile))));
+  }
+  for (const [text, mobile] of [['Ordenador', false], ['Móvil', true]]) {
+    const button = cell('button', text); button.type = 'button'; button.className = 'secondary'; button.dataset.mobile = String(mobile);
+    button.onclick = () => setMode(mobile); modes.append(button);
+  }
+  card.append(modes); setMode(false);
+  function updateCrop() { image.style.objectPosition = position.x + '% ' + position.y + '%'; }
+  if (key === 'hero') { image.style.position = 'static'; image.style.height = 'auto'; }
+  updateCrop();
+  card.append(cell('p', key === 'hero' ? 'La portada muestra la foto completa, con su proporción original.' : 'Ajusta la parte visible sin cambiar las medidas de la web.'));
+  for (const [axis, title] of [['x', 'Posición horizontal'], ['y', 'Posición vertical']]) {
+    const control = cell('label', title), range = document.createElement('input');
+    range.type = 'range'; range.min = 0; range.max = 100; range.step = 1; range.value = position[axis]; range.disabled = publishing || key === 'hero';
+    range.oninput = () => { position[axis] = Number(range.value); updateCrop(); markDirty(); };
+    control.append(range); card.append(control);
+  }
+  const center = cell('button', 'Centrar encuadre'); center.type = 'button'; center.className = 'secondary'; center.disabled = publishing || key === 'hero';
+  center.onclick = () => { position.x = 50; position.y = 50; card.querySelectorAll('input[type=range]').forEach(range => range.value = 50); updateCrop(); markDirty(); }; card.append(center);
+  const label = cell('label', 'Elegir nueva foto'); label.className = 'upload-label';
+  const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/jpeg,image/png,image/webp'; input.disabled = publishing;
+  input.onchange = async () => {
+    const file = input.files[0]; if (!file) return;
+    if (file.size > 20 * 1024 * 1024 || !['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) { editorStatus('Selecciona una foto JPG, PNG o WebP de menos de 20 MB.'); return; }
+    input.disabled = true; processingPhotos++; updatePublishButtons(); editorStatus('Preparando la foto…');
+    try {
+      const blob = await optimizePhoto(file); clearPending(key);
+      const pending = { blob, preview: URL.createObjectURL(blob), uploadedSrc: null }; pendingPhotos.set(key, pending);
+      setGalleryPhoto(key, photo); image.src = pending.preview; image.hidden = false; empty.hidden = true; markDirty();
+    } catch { editorStatus('No se ha podido preparar la imagen. Prueba con otra foto.'); }
+    finally { processingPhotos--; input.disabled = publishing; updatePublishButtons(); }
+  };
+  label.append(input); card.append(label);
+  const alt = field('Descripción de la imagen', photo.alt); alt.input.disabled = publishing;
+  alt.input.oninput = () => { photo.alt = alt.input.value; image.alt = photo.alt; markDirty(); }; card.append(alt.label);
+  if (isTraining) {
+    const remove = cell('button', 'Quitar foto'); remove.type = 'button'; remove.className = 'secondary'; remove.disabled = publishing;
+    remove.onclick = () => {
+      if (processingPhotos) return;
+      clearPending(key); setGalleryPhoto(key, null); markDirty(); renderPhotos();
+    };
+    card.append(remove);
+  }
+  container.append(card);
+}
+async function validateVideo(file) {
+  if (!['video/mp4', 'video/webm'].includes(file.type) || file.size > 3 * 1024 * 1024) throw new Error('Selecciona un vídeo MP4 o WebM de hasta 3 MB.');
+  const url = URL.createObjectURL(file), video = document.createElement('video');
+  try {
+    await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('No se ha podido leer el vídeo. Prueba con un MP4 compatible.')), 15000);
+      video.onloadedmetadata = () => { clearTimeout(timeout); Number.isFinite(video.duration) && video.duration >= 2 ? resolve() : reject(new Error('El vídeo debe durar al menos 2 segundos.')); };
+      video.onerror = () => { clearTimeout(timeout); reject(new Error('No se ha podido leer el vídeo. Prueba con un MP4 compatible.')); };
+      video.preload = 'metadata'; video.src = url;
+    });
+  } finally { video.removeAttribute('src'); video.load(); URL.revokeObjectURL(url); }
+}
+function renderVideoCard(container) {
+  const key = 'trainingVideo';
+  let item = editableContent.trainingGallery.video || { src: '', alt: 'Entrenamiento adaptado', position: { x: 50, y: 50 } };
+  const card = cell('article', ''); card.className = 'card photo-card'; card.append(cell('h2', 'Vídeo · 2 segundos'));
+  const video = document.createElement('video'); video.className = 'training-video-preview'; video.controls = true; video.muted = true; video.playsInline = true; video.preload = 'metadata';
+  video.hidden = !(item.src || pendingPhotos.has(key));
+  if (pendingPhotos.has(key)) video.src = pendingPhotos.get(key).preview; else mediaPreview(video, item.src, key);
+  video.ontimeupdate = () => { if (video.currentTime >= 2) { video.pause(); video.currentTime = 0; } };
+  card.append(video, cell('p', 'Se reproducen los primeros 2 segundos, sin sonido, después de las cinco fotos. MP4 o WebM, máximo 3 MB.'));
+  const label = cell('label', 'Elegir vídeo'); label.className = 'upload-label';
+  const input = document.createElement('input'); input.type = 'file'; input.accept = 'video/mp4,video/webm'; input.disabled = publishing;
+  input.onchange = async () => {
+    const file = input.files[0]; if (!file) return;
+    input.disabled = true; processingPhotos++; updatePublishButtons(); editorStatus('Comprobando el vídeo…');
+    try {
+      await validateVideo(file); clearPending(key);
+      const pending = { blob: file, preview: URL.createObjectURL(file), uploadedSrc: null }; pendingPhotos.set(key, pending);
+      editableContent.trainingGallery.video = item; video.src = pending.preview; video.hidden = false; markDirty();
+    } catch (error) { editorStatus(error.message); }
+    finally { processingPhotos--; input.disabled = publishing; updatePublishButtons(); }
+  };
+  label.append(input); card.append(label);
+  const alt = field('Descripción del vídeo', item.alt); alt.input.disabled = publishing;
+  alt.input.oninput = () => { item.alt = alt.input.value; markDirty(); }; card.append(alt.label);
+  const remove = cell('button', 'Quitar vídeo'); remove.type = 'button'; remove.className = 'secondary'; remove.disabled = publishing;
+  remove.onclick = () => { if (processingPhotos) return; clearPending(key); editableContent.trainingGallery.video = null; markDirty(); renderPhotos(); };
+  card.append(remove); container.append(card);
+}
+function renderPhotos() {
+  const container = document.querySelector('#photo-editor'); container.replaceChildren();
+  for (const [key, title] of Object.entries(photoLabels)) renderPhotoCard(container, key, title);
+  const gallery = document.querySelector('#training-editor'); gallery.replaceChildren();
+  for (let index = 0; index < 5; index++) renderPhotoCard(gallery, 'training:' + index, `Entrenamiento · Foto ${index + 1}`);
+  renderVideoCard(gallery);
+}
 async function optimizePhoto(file){const bitmap=await createImageBitmap(file,{imageOrientation:'from-image'});const scale=Math.min(1,2200/Math.max(bitmap.width,bitmap.height)),canvas=document.createElement('canvas');canvas.width=Math.round(bitmap.width*scale);canvas.height=Math.round(bitmap.height*scale);canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',.85));if(!blob||blob.size>2097152)throw new Error('size');return blob;}
-async function loadEditor(){const add=document.querySelector('#add-review');add.disabled=true;editorStatus('Cargando testimonios y fotos…');try{const data=await api('content');editableContent=data.content;for(const key of Object.keys(photoLabels)){if(!editableContent.photos[key])editableContent.photos[key]={...editableContent.photos.hero};}contentRevision=data.revision;canPublish=data.canPublish;dirty=false;for(const value of pendingPhotos.values())URL.revokeObjectURL(value.preview);pendingPhotos.clear();renderReviews();renderPhotos();add.disabled=false;editorStatus(canPublish?'Los cambios se publican al guardar.':'Puedes preparar los cambios. Para publicarlos falta configurar GITHUB_CONTENT_TOKEN en Vercel.');document.querySelectorAll('.publish-content').forEach(button=>button.disabled=!canPublish);}catch(error){editorStatus(error.message+' Pulsa Añadir testimonio para volver a cargar el editor.');add.disabled=false;document.querySelectorAll('.publish-content').forEach(button=>button.disabled=true);}}
+async function loadEditor(){const add=document.querySelector('#add-review');add.disabled=true;editorStatus('Cargando testimonios y fotos…');try{const data=await api('content');editableContent=data.content;for(const key of Object.keys(photoLabels)){if(!editableContent.photos[key])editableContent.photos[key]={...editableContent.photos.hero};}editableContent.trainingGallery={photos:Array.from({length:5},(_,i)=>data.content.trainingGallery?.photos?.[i]||(i===0&&!data.content.trainingGallery?structuredClone(editableContent.photos.training||editableContent.photos.hero):null)),video:data.content.trainingGallery?.video||null};contentRevision=data.revision;canPublish=data.canPublish;dirty=false;for(const value of pendingPhotos.values())URL.revokeObjectURL(value.preview);pendingPhotos.clear();renderReviews();renderPhotos();add.disabled=false;editorStatus(canPublish?'Los cambios se publican al guardar.':'Puedes preparar los cambios. Para publicarlos falta configurar GITHUB_CONTENT_TOKEN en Vercel.');document.querySelectorAll('.publish-content').forEach(button=>button.disabled=!canPublish);}catch(error){editorStatus(error.message+' Pulsa Añadir testimonio para volver a cargar el editor.');add.disabled=false;document.querySelectorAll('.publish-content').forEach(button=>button.disabled=true);}}
 document.querySelector('#add-review').addEventListener('click',()=>{if(publishing)return;if(!editableContent){loadEditor();return;}if(editableContent.testimonials.length>=20){editorStatus('Puedes incluir un máximo de 20 testimonios.');return;}editableContent.testimonials.push({author:'',quote:''});markDirty();renderReviews();const card=document.querySelector('#review-editor').lastElementChild;card.scrollIntoView({behavior:'smooth',block:'center'});card.querySelector('input').focus({preventScroll:true});});
 function asBase64(blob){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(blob);});}
-async function publishContent(){if(!editableContent||publishing||processingPhotos>0||!canPublish)return;if(!dirty){editorStatus('No hay cambios pendientes.');return;}if(editableContent.testimonials.some(item=>!item.author.trim()||!item.quote.trim())){editorStatus('Completa el nombre y el texto de todos los testimonios.');return;}publishing=true;document.querySelectorAll('.publish-content').forEach(button=>{button.disabled=true;button.textContent='Publicando…';});document.querySelector('#add-review').disabled=true;renderReviews();renderPhotos();editorStatus('Guardando imágenes y contenido…');try{for(const [key,pending]of pendingPhotos){if(!pending.uploadedSrc){const result=await api('upload',{data:await asBase64(pending.blob),type:pending.blob.type});pending.uploadedSrc=result.src;}editableContent.photos[key].src=pending.uploadedSrc;}editableContent.photos.aboutMobile={...editableContent.photos.aboutDesktop};editableContent.photos.movement={...editableContent.photos.method};const result=await api('publish',{content:editableContent,revision:contentRevision});contentRevision=result.revision;dirty=false;editorStatus('Cambios guardados. Vercel está preparando el despliegue; aparecerán en la web cuando termine.');}catch(error){editorStatus(error.message);}finally{publishing=false;document.querySelector('#add-review').disabled=false;document.querySelectorAll('.publish-content').forEach(button=>{button.disabled=!canPublish;button.textContent='Publicar cambios ↗';});renderReviews();renderPhotos();}}
+async function publishContent(){if(!editableContent||publishing||processingPhotos>0||!canPublish)return;if(!dirty){editorStatus('No hay cambios pendientes.');return;}if(editableContent.testimonials.some(item=>!item.author.trim()||!item.quote.trim())){editorStatus('Completa el nombre y el texto de todos los testimonios.');return;}publishing=true;document.querySelectorAll('.publish-content').forEach(button=>{button.disabled=true;button.textContent='Publicando…';});document.querySelector('#add-review').disabled=true;renderReviews();renderPhotos();editorStatus('Guardando imágenes y contenido…');try{for(const [key,pending]of pendingPhotos){if(!pending.uploadedSrc){const result=await api('upload',{data:await asBase64(pending.blob),type:pending.blob.type});pending.uploadedSrc=result.src;}if(key==='trainingVideo')editableContent.trainingGallery.video.src=pending.uploadedSrc;else galleryPhoto(key).src=pending.uploadedSrc;}const firstTraining=editableContent.trainingGallery.photos.find(photo=>photo?.src);if(firstTraining)editableContent.photos.training=structuredClone(firstTraining);editableContent.photos.aboutMobile={...editableContent.photos.aboutDesktop};editableContent.photos.movement={...editableContent.photos.method};const result=await api('publish',{content:editableContent,revision:contentRevision});contentRevision=result.revision;dirty=false;editorStatus('Cambios guardados. Vercel está preparando el despliegue; aparecerán en la web cuando termine.');}catch(error){editorStatus(error.message);}finally{publishing=false;document.querySelector('#add-review').disabled=false;document.querySelectorAll('.publish-content').forEach(button=>{button.disabled=!canPublish;button.textContent='Publicar cambios ↗';});renderReviews();renderPhotos();}}
 document.querySelectorAll('.publish-content').forEach(button=>button.addEventListener('click',publishContent));
 window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});

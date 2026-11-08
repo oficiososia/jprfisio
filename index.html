@@ -181,7 +181,7 @@
     .photo{position:relative;background:var(--cream);overflow:hidden;border-radius:var(--radius)}
     .hero-photo{width:min(40vw,620px);height:auto;justify-self:center;align-self:center}
     .photo img{display:block;width:100%;height:auto}
-    .method-photo img,.movement-photo img,.training-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .method-photo img,.movement-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
     .photo:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,0,0,.025))}
     .placeholder{position:absolute;inset:0;display:flex;align-items:flex-end;padding:24px;color:#66645f;font-size:11px;line-height:1.5;letter-spacing:.04em;text-transform:uppercase;max-width:430px}
     .photo-note{position:absolute;right:-20px;top:48px;writing-mode:vertical-rl;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
@@ -233,7 +233,6 @@
     #metodologia h2{font-size:clamp(34px,3.4vw,48px)}
     :root{--title-gap:calc(clamp(46px,4.8vw,76px)*.83)}
     #metodologia h2,.training-copy h2{margin-top:var(--title-gap);margin-bottom:var(--title-gap)}
-    .training-copy .training-photo{margin-top:0}
     .method-title-line{display:block;white-space:nowrap}
     .steps{border-top:1px solid var(--line)}
     .step{display:grid;grid-template-columns:55px 1fr;padding:28px 0;border-bottom:1px solid var(--line)}
@@ -249,27 +248,74 @@
       .movement{display:none}
     }
     #entrenamientos{background:var(--bone)}
-    .training-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:8vw;align-items:start}
-    .training-photo{height:min(38vw,500px);min-height:320px;margin-top:34px}
-    [data-site-photo],.training-slide img,.training-slide video{opacity:0}
-    [data-site-photo].media-ready,.training-slide .media-ready{opacity:1;transition:opacity .3s ease}
+    .training-grid{display:grid;grid-template-columns:.9fr 1.1fr;grid-template-areas:"copy list" "gallery gallery";column-gap:8vw;align-items:start}
+    .training-copy{grid-area:copy}.training-list{grid-area:list}
+    [data-site-photo],.tg-media{opacity:0}
+    [data-site-photo].media-ready,.tg-media.media-ready{opacity:1;transition:opacity .3s ease}
     .hero-photo:not(:has(.media-ready)){aspect-ratio:1673/1900}
     [data-media-error]:after{content:attr(data-media-error);position:absolute;inset:0;display:grid;place-items:center;padding:25px;text-align:center;color:var(--muted);font-size:13px;pointer-events:none}
     .media-retry{position:absolute;z-index:2;left:50%;top:60%;transform:translateX(-50%);padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--bone);cursor:pointer}
-    .training-stage,.training-slide{position:absolute;inset:0}
-    .training-slide[hidden],.training-controls[hidden]{display:none}
-    .training-slide video{width:100%;height:100%;object-fit:cover}
-    .training-stage{touch-action:pan-y}
-    .training-controls{position:absolute;z-index:2;bottom:14px;left:14px;right:14px;display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 8px;border-radius:12px;background:rgba(35,28,22,.78);color:#fff}
-    .training-controls button{display:grid;place-items:center;flex-shrink:0;width:36px;height:40px;border:0;border-radius:7px;color:inherit;background:transparent;cursor:pointer;font-size:18px}
-    .training-controls button:hover{background:#ffffff24}
-    .training-controls button:focus-visible{outline:2px solid white;outline-offset:1px}
-    .training-dots{display:flex;justify-content:center;flex:1;min-width:0}
-    .training-dots button{width:24px;font-size:0}
-    .training-dots button:before{content:"";width:6px;height:6px;border-radius:50%;background:#ffffff70}
-    .training-dots button[aria-current=true]:before{background:#fff;transform:scale(1.35)}
-    .training-count{font-size:11px;white-space:nowrap;font-variant-numeric:tabular-nums;margin:0 4px}
-    @media(max-width:380px){.training-controls{left:8px;right:8px;gap:2px;padding:4px}.training-dots button{width:21px}.training-controls>button{width:30px}.training-count{margin:0 2px}}
+    /* Training gallery: swipeable main photo, two side photos and a full-screen viewer. */
+    .training-gallery{grid-area:gallery;margin-top:96px;min-width:0}
+    .training-gallery button,.tg-viewer button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
+    .training-gallery button:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+    .tg-viewer button:focus-visible{outline:2px solid #d8c7ad;outline-offset:4px}
+    .tg-mosaic{display:grid;grid-template-columns:1.8fr 1fr;gap:12px;height:clamp(440px,38vw,540px)}
+    .tg-single .tg-mosaic{grid-template-columns:1fr}.tg-single .tg-side{display:none}
+    .tg-mosaic button{position:relative;display:block;width:100%;min-height:0;padding:0;border:0;overflow:hidden;border-radius:var(--radius);background:var(--cream);cursor:zoom-in}
+    .tg-mosaic .tg-media{display:block;width:100%;height:100%;object-fit:cover;transition:opacity .3s ease,transform .3s ease}
+    @media(hover:hover) and (prefers-reduced-motion:no-preference){.tg-mosaic button:hover .tg-media{transform:scale(1.025)}}
+    .tg-main{position:relative;display:flex;overflow-x:auto;overflow-y:hidden;min-width:0;height:100%;border-radius:var(--radius);background:var(--cream);scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:pan-x pan-y pinch-zoom}
+    .tg-main::-webkit-scrollbar{display:none}
+    .tg-mosaic .tg-main-photo{flex:0 0 100%;height:100%;border-radius:0;scroll-snap-align:start}
+    .tg-main-photo img{-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+    .tg-side{display:grid;grid-template-rows:1fr 1fr;gap:12px;min-height:0}
+    .tg-expand{position:absolute;top:16px;right:16px;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--paper);color:var(--ink)}
+    .tg-photo-label{position:absolute;inset:auto 0 0;display:flex;align-items:end;justify-content:space-between;padding:48px 26px 24px;background:linear-gradient(transparent,rgba(23,20,17,.78));color:#fff;text-align:left;font-size:26px;line-height:1;letter-spacing:-.03em}
+    .tg-photo-label span{padding-bottom:3px;font-size:12px;letter-spacing:.1em;font-variant-numeric:tabular-nums}
+    .tg-all-label{position:absolute;right:14px;bottom:14px;display:flex;align-items:center;gap:8px;padding:12px 15px;border-radius:30px;background:var(--paper);color:var(--ink);font-size:12px}
+    .tg-caption{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px;padding-top:22px}
+    .tg-caption[hidden]{display:none}
+    .tg-caption>p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+    .tg-navigation{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .tg-round{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:44px;height:44px;padding:0;border:1px solid var(--line);border-radius:50%;background:transparent;cursor:pointer}
+    .tg-round:disabled{opacity:.3;cursor:default}
+    .tg-round[hidden],.tg-count[hidden]{display:none}
+    .tg-count{min-width:38px;text-align:center;font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+    .tg-view-all{display:flex;align-items:center;gap:10px;padding:12px 0 12px 14px;border:0;background:none;font-size:12px!important;white-space:nowrap;cursor:pointer}
+    html:has(.tg-viewer[open]){overflow:hidden}
+    .tg-viewer{width:calc(100% - 64px);max-width:1200px;height:min(900px,92dvh);max-height:none;padding:0;border:0;border-radius:var(--radius);background:#1d1a17;color:#f6f2eb;overflow:hidden;box-shadow:0 24px 90px rgba(0,0,0,.33)}
+    .tg-viewer[open]{display:flex;flex-direction:column}
+    .tg-viewer::backdrop{background:rgba(20,17,14,.85)}
+    .tg-viewer-header{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;padding:24px 28px}
+    .tg-viewer-header h2{margin:0;color:inherit;font-size:24px;font-weight:500;letter-spacing:-.03em}
+    .tg-viewer .tg-round{border-color:#5d554c}
+    .tg-viewer-stage{position:relative;display:flex;align-items:center;flex:1;min-height:0;padding:0 76px}
+    .tg-viewport{display:flex;width:100%;height:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:pan-x pan-y pinch-zoom}
+    .tg-viewport::-webkit-scrollbar{display:none}
+    .tg-slide{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 100%;min-width:0;height:100%;scroll-snap-align:start}
+    .tg-slide .tg-media{display:block;width:100%;height:100%;object-fit:contain}
+    .tg-prev,.tg-next{position:absolute;z-index:1;top:50%;transform:translateY(-50%);background:rgba(29,26,23,.9)}
+    .tg-prev{left:16px}.tg-next{right:16px}
+    .tg-viewer-footer{flex-shrink:0;padding:22px 28px 18px}
+    .tg-thumbnails{display:flex;justify-content:safe center;gap:10px;overflow-x:auto;scrollbar-width:none}
+    .tg-thumbnails button{display:block;flex:0 0 auto;width:66px;height:52px;padding:3px;border:1px solid transparent;border-radius:6px;background:none;opacity:.5;cursor:pointer}
+    .tg-thumbnails button[aria-pressed=true]{opacity:1;border-color:#d8c7ad}
+    .tg-thumbnails .tg-media{display:block;width:100%;height:100%;object-fit:cover;border-radius:3px}
+    .tg-viewer-status{display:flex;justify-content:space-between;margin-top:16px;color:#d0ccc4;font-size:12px;letter-spacing:.05em}
+    .tg-viewer-status>span:last-child{color:#fff;font-variant-numeric:tabular-nums}.tg-viewer-status>span:last-child span{color:#b4b0a8}
+    .tg-sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:700px){
+      .tg-mosaic{grid-template-columns:1fr;height:min(112vw,460px);min-height:340px}.tg-side{display:none}
+      .tg-photo-label{padding:44px 20px 20px;font-size:22px}
+      .tg-caption{flex-direction:column;align-items:stretch;gap:15px;padding-top:18px}
+      .tg-navigation{width:100%}.tg-view-all{margin-left:auto}
+      .tg-viewer{width:100%;max-width:none;height:100dvh;margin:0;border-radius:0}
+      .tg-viewer-header{padding:calc(20px + env(safe-area-inset-top)) 20px 20px}
+      .tg-viewer-stage{padding:0}.tg-prev{left:8px}.tg-next{right:8px}
+      .tg-viewer-footer{padding:20px 18px calc(18px + env(safe-area-inset-bottom))}
+      .tg-thumbnails{gap:6px}.tg-thumbnails button{width:52px;height:46px}
+    }
     .training-list{border-top:1px solid var(--line);margin-top:80px}
     .training-item{display:grid;grid-template-columns:55px 1fr;padding:28px 0;border-bottom:1px solid var(--line)}
     .training-item b{font-size:12px}.training-item h3{font-size:25px;margin-bottom:7px}.training-item p{margin:0;color:var(--muted);font-size:15px}
@@ -332,7 +378,7 @@
     @media(max-width:900px){
       :root{--pad:36px}.links a:not(.btn){display:none}.menu-toggle{display:inline-flex;position:relative;flex:0 0 auto}.mobile-panel{display:block}.links{gap:10px}nav{position:relative}
       .hero{grid-template-columns:1fr;padding-top:142px;gap:45px;min-height:101vh;min-height:101svh;min-height:101dvh;align-content:center}.hero-copy:before{width:min(1140px,168vw);opacity:.07}.hero-photo{width:min(100%,540px);height:auto;justify-self:start}.photo-note{display:none}
-      section,.manifesto{padding-top:110px;padding-bottom:110px}.testimonials{padding-top:68px;padding-bottom:68px}.about-grid,.method-grid,.training-grid,.faq-grid{grid-template-columns:1fr;gap:55px}.training-list{margin-top:0}
+      section,.manifesto{padding-top:110px;padding-bottom:110px}.testimonials{padding-top:68px;padding-bottom:68px}.about-grid,.method-grid,.faq-grid{grid-template-columns:1fr;gap:55px}.training-grid{grid-template-columns:1fr;grid-template-areas:"copy" "gallery" "list";gap:0}.training-gallery{margin-top:0}.training-list{margin-top:55px}
       .about-grid{grid-template-columns:minmax(250px,.92fr) minmax(0,1.08fr);gap:34px}.about-photo{height:620px}.about-copy{padding-top:0}.about-copy .section-id{margin-bottom:28px}
       .about-copy h2{font-size:clamp(35px,5vw,47px)}.about-copy .bio{margin-top:22px}.about-copy .bio p{font-size:14.5px;line-height:1.62}.about-quote{padding:26px 18px}
       .about-principles{grid-template-columns:1fr;gap:40px;padding:58px 0 76px}.about-icon{width:64px;height:64px}.about-principle h3{font-size:20px}.about-principle p{font-size:14px}
@@ -354,7 +400,7 @@
       section,.manifesto{padding-top:88px;padding-bottom:88px}.testimonials{padding-top:52px;padding-bottom:54px}.manifesto{text-align:center}.about-grid{grid-template-columns:1fr;gap:18px}.about-media{display:none}.about-copy{padding-top:0}.about-copy .about-photo-mobile{display:block;width:min(100%,430px);height:min(116vw,520px);margin:26px auto 0;border-radius:18px}.about-copy .about-photo-mobile img{object-position:27% 50%}.about-photo-caption{left:22px;bottom:22px;font-size:10px}
       .about-copy .section-id{margin-bottom:24px}.about-copy h2{font-size:clamp(30px,10vw,42px);line-height:1.08;letter-spacing:-.04em;max-width:100%}.about-heading-line{white-space:normal}.about-copy .bio p{font-size:15px}
       .about-quote{width:min(100%,430px);margin:30px auto 0;padding:24px 14px}.about-copy .bio .about-quote p{line-height:1.25;letter-spacing:-.035em}.about-principles{grid-template-columns:1fr;gap:34px;padding:52px 0 62px}.about-personality{padding:58px 0 66px}.about-personality-inner{grid-template-columns:1fr;gap:36px}.about-personality h3{font-size:clamp(32px,9vw,43px)}.about-personality p{font-size:16px}.personality-note{justify-self:start;transform:none;font-size:21px}
-      .training-copy h2{font-size:clamp(23px,7.3vw,38px);line-height:1.08;letter-spacing:-.055em}.training-title-line{display:block;white-space:nowrap}.training-photo{height:min(92vw,430px);min-height:260px;margin-top:28px}.training-item{grid-template-columns:42px 1fr}
+      .training-copy h2{font-size:clamp(23px,7.3vw,38px);line-height:1.08;letter-spacing:-.055em}.training-title-line{display:block;white-space:nowrap}.training-item{grid-template-columns:42px 1fr}
       #metodologia h2{font-size:clamp(22px,8.2vw,40px);line-height:1.08}
       .step h3,.training-item h3{font-size:clamp(16px,5vw,25px);line-height:1.3;white-space:nowrap}
       .movement{padding-bottom:90px}.movement-photo{height:110vw}.quote{margin-top:24px}.quote-meta{gap:20px;margin-top:26px}
@@ -516,16 +562,37 @@
     <div class="training-copy reveal">
       <div class="section-id">03 — Entrenamientos</div>
       <h2><span class="training-title-line">Entrenar con sentido,</span> <span class="training-title-line">avanzar con seguridad.</span></h2>
-      <div class="photo training-photo" data-training-carousel role="region" aria-roledescription="carrusel" aria-label="Fotos y vídeo de entrenamiento">
-        <div class="training-stage" data-training-stage></div>
-        <div class="training-controls" data-training-controls hidden>
-          <button type="button" data-training-prev aria-label="Imagen anterior">←</button>
-          <div class="training-dots" data-training-dots></div>
-          <span class="training-count" data-training-count></span>
-          <button type="button" data-training-toggle aria-label="Pausar carrusel">Ⅱ</button>
-          <button type="button" data-training-next aria-label="Imagen siguiente">→</button>
+    </div>
+    <div class="training-gallery reveal" data-training-carousel>
+      <div class="tg-mosaic">
+        <div class="tg-main" data-training-stage role="region" aria-roledescription="carrusel" aria-label="Fotos y vídeo de entrenamiento"></div>
+        <div class="tg-side" data-training-side></div>
+      </div>
+      <div class="tg-caption" data-training-controls hidden>
+        <p>Sesiones guiadas al aire libre, adaptadas a tu lesión y a tu punto de partida.</p>
+        <div class="tg-navigation">
+          <button type="button" class="tg-round" data-training-prev aria-label="Foto anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+          <span class="tg-count" data-training-count aria-live="polite"></span>
+          <button type="button" class="tg-round" data-training-next aria-label="Foto siguiente"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+          <button type="button" class="tg-view-all" data-training-open>Ver galería <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
         </div>
       </div>
+      <dialog class="tg-viewer" data-training-viewer aria-labelledby="tg-viewer-title">
+        <div class="tg-viewer-header">
+          <h2 id="tg-viewer-title">Entrenamientos</h2>
+          <button type="button" class="tg-round" data-viewer-close aria-label="Cerrar galería"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </div>
+        <p class="tg-sr-only">Galería de entrenamiento. Desliza o usa las flechas para ver más.</p>
+        <div class="tg-viewer-stage">
+          <button type="button" class="tg-round tg-prev" data-viewer-prev aria-label="Foto anterior"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+          <div class="tg-viewport" data-viewer-track></div>
+          <button type="button" class="tg-round tg-next" data-viewer-next aria-label="Foto siguiente"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+        </div>
+        <div class="tg-viewer-footer">
+          <div class="tg-thumbnails" data-viewer-thumbs aria-label="Fotos y vídeo de entrenamiento"></div>
+          <div class="tg-viewer-status"><span>Desliza para ver más</span><span data-viewer-count aria-live="polite"></span></div>
+        </div>
+      </dialog>
     </div>
     <div class="training-list reveal">
       <div class="training-item"><b>01</b><div><h3>Conciencia Corporal</h3><p>Es fundamental comprender cómo se organiza nuestro cuerpo y cómo se relaciona con el espacio. La conciencia corporal es la base para desarrollar un movimiento más controlado y eficiente.</p></div></div>

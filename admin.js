@@ -92,7 +92,7 @@ function renderPhotoCard(container, key, title) {
   frame.append(image, empty); card.append(frame);
   const position = photo.position || { x: key.startsWith('about') ? 27 : 50, y: 50 };
   photo.position = position;
-  const ratio = isTraining ? [1.23, .86] : { hero: [1, 1], aboutDesktop: [.68, 430 / 520], method: [1.05, .8] }[key];
+  const ratio = isTraining ? [1.45, .8] : { hero: [1, 1], aboutDesktop: [.68, 430 / 520], method: [1.05, .8] }[key];
   const modes = cell('div', ''); modes.className = 'crop-modes';
   function setMode(mobile) {
     frame.style.aspectRatio = key === 'hero' ? 'auto' : String(ratio[mobile ? 1 : 0]);
@@ -161,7 +161,7 @@ function renderVideoCard(container) {
   video.hidden = !(item.src || pendingPhotos.has(key));
   if (pendingPhotos.has(key)) video.src = pendingPhotos.get(key).preview; else mediaPreview(video, item.src, key);
   video.ontimeupdate = () => { if (video.currentTime >= 2) { video.pause(); video.currentTime = 0; } };
-  card.append(video, cell('p', 'Se reproducen los primeros 2 segundos, sin sonido, después de las cinco fotos. MP4 o WebM, máximo 3 MB.'));
+  card.append(video, cell('p', 'Se repiten los primeros 2 segundos, sin sonido, cuando el vídeo está en pantalla. Aparece después de las cinco fotos. MP4 o WebM, máximo 3 MB.'));
   const label = cell('label', 'Elegir vídeo'); label.className = 'upload-label';
   const input = document.createElement('input'); input.type = 'file'; input.accept = 'video/mp4,video/webm'; input.disabled = publishing;
   input.onchange = async () => {

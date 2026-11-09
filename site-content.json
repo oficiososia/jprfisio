@@ -55,24 +55,16 @@
       }
     },
     "training": {
-      "src": "media/66c561b4d49a4137ffbcafe3e289e770.webp",
-      "alt": "Jorge Planelles Ricarte supervisa un ejercicio de elevación de rodilla con banda elástica en los tobillos",
+      "src": "media/99ee400a7bf827d763e4aea3be9761f2.webp",
+      "alt": "Jorge Planelles Ricarte guía la activación abdominal de un paciente durante un entrenamiento al aire libre",
       "position": {
         "x": 50,
-        "y": 65
+        "y": 40
       }
     }
   },
   "trainingGallery": {
     "photos": [
-      {
-        "src": "media/66c561b4d49a4137ffbcafe3e289e770.webp",
-        "alt": "Jorge Planelles Ricarte supervisa un ejercicio de elevación de rodilla con banda elástica en los tobillos",
-        "position": {
-          "x": 50,
-          "y": 65
-        }
-      },
       {
         "src": "media/99ee400a7bf827d763e4aea3be9761f2.webp",
         "alt": "Jorge Planelles Ricarte guía la activación abdominal de un paciente durante un entrenamiento al aire libre",
@@ -82,11 +74,19 @@
         }
       },
       {
-        "src": "media/45a1dc6a569d471f10b544bb25734d69.webp",
+        "src": "media/ebe0726b103b099e312b8551a02807b0.webp",
+        "alt": "Jorge Planelles Ricarte supervisa un ejercicio de elevación de rodilla con banda elástica en los tobillos",
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      },
+      {
+        "src": "media/3b7e70a4c5eee7a72b05198bb512df02.webp",
         "alt": "Jorge Planelles Ricarte corrige la postura de un paciente en un ejercicio de equilibrio a una pierna con banda elástica",
         "position": {
           "x": 50,
-          "y": 66
+          "y": 50
         }
       },
       {
@@ -104,15 +104,16 @@
           "x": 50,
           "y": 45
         }
+      },
+      {
+        "src": "media/68dbeeea4f2c39a2870ad132032ba49f.webp",
+        "alt": "Jorge Planelles Ricarte y un paciente corren juntos durante un entrenamiento al aire libre",
+        "position": {
+          "x": 50,
+          "y": 60
+        }
       }
     ],
-    "video": {
-      "src": "media/7422936f8e8c20a9bc3448040237114a.mp4",
-      "alt": "Jorge Planelles Ricarte y un paciente corren hacia la cámara durante un entrenamiento en el parque",
-      "position": {
-        "x": 50,
-        "y": 50
-      }
-    }
+    "video": null
   }
 }

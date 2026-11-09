@@ -19,9 +19,11 @@ Documentación: https://vercel.com/docs/analytics/web-analytics-api
 
 ## Fotos y carrusel de entrenamiento
 
-En **Fotos y vídeo** se editan la portada, Sobre mí, Metodología y la galería de Entrenamiento. La galería tiene cinco posiciones de foto y una de vídeo; las posiciones vacías se omiten. La primera foto es la principal y se desliza (o se cambia con las flechas) hacia las siguientes; en escritorio, las dos siguientes aparecen a su lado. Pulsar cualquier foto o «Ver galería» abre la galería ampliada con miniaturas, que muestra cada foto completa. No hay avance automático. Del vídeo MP4/WebM se repiten los primeros dos segundos, sin sonido, mientras está en pantalla. El vídeo debe durar al menos dos segundos y pesar como máximo 3 MB; las fotos se optimizan a WebP (hasta 2 MB).
+En **Fotos y vídeo** se editan la portada, Sobre mí, Metodología y la galería de Entrenamiento. La galería tiene seis posiciones de foto y una de vídeo opcional; las posiciones vacías se omiten. La primera foto es la principal; en escritorio, las dos siguientes aparecen a su lado. Las fotos pasan solas cada dos segundos y, después de la última, se vuelve a la primera. Si hay vídeo, aparece después de las fotos: se reproducen una vez sus primeros dos segundos, sin sonido, y la galería pasa a la primera foto. Pulsar cualquier foto o «Ver galería» abre la galería ampliada con miniaturas, que muestra cada foto completa. El vídeo debe durar al menos dos segundos y pesar como máximo 3 MB; las fotos se optimizan a WebP (hasta 2 MB).
 
-El encuadre (posición horizontal y vertical) se aplica a la foto principal y a las laterales; la vista previa del panel usa la proporción de la foto principal en ordenador y en móvil. El vídeo se pausa al salir de la sección, al ocultar la pestaña o al abrir la galería ampliada, y no se reproduce solo si el dispositivo pide movimiento reducido.
+El pase automático se pausa con su botón, al navegar a mano (flechas, deslizar o teclado) y se reanuda con el mismo botón. Se suspende mientras el ratón está sobre las fotos, con el foco de teclado dentro de la galería, con la galería ampliada abierta, al salir de la sección o al ocultar la pestaña. Si el dispositivo pide movimiento reducido, empieza en pausa.
+
+El encuadre (posición horizontal y vertical) se aplica a la foto principal y a las laterales; la vista previa del panel usa la proporción de la foto principal en ordenador y en móvil.
 
 Las imágenes de la web no tienen una URL antigua provisional: se asignan al recibir `site-content.json`, solicitado sin caché. Si esa petición falla, se ofrece un botón de reintento.
 
@@ -34,4 +36,4 @@ Las imágenes de la web no tienen una URL antigua provisional: se asignan al rec
 ffmpeg -f lavfi -i testsrc2=size=320x240:rate=30 -t 4 -c:v libx264 -pix_fmt yuv420p -movflags +faststart media/11111111111111111111111111111111.mp4
 ```
 
-Abrir `/tests/browser.html`. El clip de prueba permite comprobar que la web repite solo los dos primeros segundos; no debe publicarse ni añadirse a Git.
+Abrir `/tests/browser.html`. El clip de prueba permite comprobar que la web reproduce solo los dos primeros segundos; no debe publicarse ni añadirse a Git.

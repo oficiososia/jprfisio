@@ -11,37 +11,37 @@ test('content without a gallery falls back to one real training slide', () => {
   const { trainingGallery, ...legacy } = base;
   const value = validateContent(legacy);
   assert.deepEqual(value.photos, base.photos);
-  assert.deepEqual(value.trainingGallery.photos, [base.photos.training, null, null, null, null]);
+  assert.deepEqual(value.trainingGallery.photos, [base.photos.training, null, null, null, null, null]);
   assert.equal(value.trainingGallery.video, null);
 });
-test('published training gallery has five photos and a video that exist and pass upload checks', () => {
+test('published training gallery has six photos that exist and pass upload checks', () => {
   const value = validateContent(base);
   // Publishing from the admin must not rewrite the committed file.
   assert.deepEqual(value, base);
   const { photos, video } = value.trainingGallery;
-  assert.equal(photos.filter(Boolean).length, 5);
-  assert.ok(video);
+  assert.equal(photos.filter(Boolean).length, 6);
+  assert.equal(video, null);
   assert.deepEqual(base.photos.training, photos[0]);
-  for (const item of [...photos, video]) {
+  for (const item of [...photos, video].filter(Boolean)) {
     const bytes = fs.readFileSync(item.src);
     const type = item.src.endsWith('.mp4') ? 'video/mp4' : 'image/webp';
     assert.ok(item.alt.trim(), item.src);
     assert.doesNotThrow(() => validateUpload({ type, data: bytes.toString('base64') }), item.src);
   }
 });
-test('five photos and one video survive a publish round trip with crop positions', () => {
-  const value = validateContent({ ...base, trainingGallery: { photos: Array(5).fill(photo), video } });
+test('six photos and one video survive a publish round trip with crop positions', () => {
+  const value = validateContent({ ...base, trainingGallery: { photos: Array(6).fill(photo), video } });
   assert.deepEqual(validateContent(JSON.parse(JSON.stringify(value))), value);
-  assert.equal(value.trainingGallery.photos.length, 5);
+  assert.equal(value.trainingGallery.photos.length, 6);
   assert.deepEqual(value.trainingGallery.video, video);
 });
 test('empty slots stay empty and gallery order is preserved', () => {
   const value = validateContent({ ...base, trainingGallery: { photos: [null, photo, null, photo, null], video: null } });
-  assert.deepEqual(value.trainingGallery.photos, [null, photo, null, photo, null]);
+  assert.deepEqual(value.trainingGallery.photos, [null, photo, null, photo, null, null]);
 });
 test('extra slides, executable paths, wrong media types and invalid crops are rejected', () => {
   for (const gallery of [
-    { photos: Array(6).fill(photo) },
+    { photos: Array(7).fill(photo) },
     { photos: [{ ...photo, src: 'https://example.com/tracking.png' }] },
     { photos: [{ ...photo, src: '../hero.jpg' }] },
     { photos: [video] },
@@ -90,7 +90,7 @@ test('authenticated upload and publish preserve gallery; unauthenticated writes 
     await handler({ method: 'POST', query: { action: 'publish' }, headers, body: { content: { ...base, trainingGallery: { photos: Array(5).fill(photo), video: { ...video, src: uploaded.body.src } } }, revision: 'a'.repeat(40) } }, published);
     assert.equal(published.code, 200);
     const saved = JSON.parse(Buffer.from(requests[1].body.content, 'base64'));
-    assert.equal(saved.trainingGallery.photos.length, 5);
+    assert.equal(saved.trainingGallery.photos.length, 6);
     assert.equal(saved.trainingGallery.video.src, uploaded.body.src);
     assert.equal(requests[1].body.sha, 'a'.repeat(40));
   } finally { global.fetch = originalFetch; }

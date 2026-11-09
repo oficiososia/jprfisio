@@ -33,6 +33,9 @@
   }
 
   const expandIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>';
+  const pauseIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+  const playIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+  const photoSeconds = 2;
   const openIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>';
   const pad = value => String(value).padStart(2, '0');
 
@@ -41,7 +44,7 @@
     const root = document.querySelector('[data-training-carousel]');
     if (!root || root.dataset.ready) return;
     const gallery = content.trainingGallery;
-    const photos = (Array.isArray(gallery?.photos) ? gallery.photos.slice(0, 5) : [content.photos?.training])
+    const photos = (Array.isArray(gallery?.photos) ? gallery.photos.slice(0, 6) : [content.photos?.training])
       .filter(item => item && imagePath.test(item.src));
     const items = photos.map(item => ({ ...item, type: 'image' }));
     if (gallery?.video && videoPath.test(gallery.video.src)) items.push({ ...gallery.video, type: 'video' });
@@ -63,6 +66,9 @@
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const canOpen = typeof viewer.showModal === 'function';
     let index = 0, viewerIndex = 0, frame = 0, viewerFrame = 0, opener = null, viewerItems = null;
+    // Autoplay: `paused` is the visitor's choice; hover, keyboard focus, viewer and visibility only suspend it.
+    let paused = motion.matches, hovering = false, keyboardFocus = false, timer = 0;
+    let programmatic = null, programmaticTimer = 0;
     let near = !('IntersectionObserver' in window), inView = near;
     const describe = item => item.alt || (item.type === 'video' ? 'Vídeo de entrenamiento' : 'Entrenamiento adaptado');
     const kind = item => item.type === 'video' ? 'vídeo' : 'foto';
@@ -70,7 +76,7 @@
     const behavior = () => motion.matches ? 'auto' : 'smooth';
 
     // Media elements get their src only when needed; `still` shows the first video frame without playing.
-    function createMedia(item, still = false) {
+    function createMedia(item, still = false, onLimit = null) {
       const media = document.createElement(item.type === 'video' ? 'video' : 'img');
       media.className = 'tg-media';
       if (item.type === 'video') {
@@ -80,8 +86,10 @@
         media.setAttribute('playsinline', '');
         media.preload = 'none';
         media.setAttribute('aria-label', describe(item));
-        // Only the first two seconds are shown, on a loop.
-        media.addEventListener('timeupdate', () => { if (media.currentTime >= 2) media.currentTime = 0; });
+        // Only the first two seconds are shown: `onLimit` decides what follows, otherwise they loop.
+        const limit = () => { if (onLimit) onLimit(); else { media.currentTime = 0; media.play().catch(() => {}); } };
+        media.addEventListener('timeupdate', () => { if (media.currentTime >= 2) limit(); });
+        media.addEventListener('ended', limit);
         media.addEventListener('loadeddata', ready);
         media.dataset.src = still ? item.src + '#t=0.001' : item.src;
       } else {
@@ -112,7 +120,7 @@
       button.className = 'tg-main-photo';
       button.tabIndex = i === 0 ? 0 : -1;
       button.setAttribute('aria-label', `Ampliar ${kind(item)} ${i + 1} de ${total}: ${describe(item)}`);
-      const media = createMedia(item);
+      const media = createMedia(item, false, () => finishVideo(i));
       const expand = document.createElement('span');
       expand.className = 'tg-expand';
       expand.innerHTML = expandIcon;
@@ -165,15 +173,46 @@
     }
     function playIf(media, active) {
       if (media.tagName !== 'VIDEO') return;
-      if (active && !motion.matches) {
+      // With reduced motion the video only plays if the visitor started the gallery.
+      if (active && (!motion.matches || !paused)) {
         load(media, true);
         media.play().catch(() => {});
       } else if (!media.paused) media.pause();
     }
     function syncVideo() {
       const open = viewer.open;
-      slides.forEach((media, i) => playIf(media, !open && i === index && inView && !document.hidden));
+      slides.forEach((media, i) => {
+        playIf(media, !open && i === index && inView && !document.hidden);
+        // Each visit to the video starts from the beginning.
+        if (i !== index && media.tagName === 'VIDEO' && media.currentTime) media.currentTime = 0;
+      });
       viewerItems?.forEach(({ media }, i) => playIf(media, open && i === viewerIndex && !document.hidden));
+    }
+    const canAutoplay = () => !paused && !hovering && !keyboardFocus && inView && !document.hidden && !viewer.open && total > 1;
+    function schedule() {
+      clearTimeout(timer);
+      if (!canAutoplay()) return;
+      // Photos stay two seconds; the video moves on when it finishes (the longer wait is only a fallback).
+      timer = setTimeout(advance, items[index].type === 'video' ? 6000 : photoSeconds * 1000);
+    }
+    function advance() {
+      if (!canAutoplay()) return;
+      const i = (index + 1) % total;
+      scrollToIndex(i, i !== 0);
+    }
+    function finishVideo(i) {
+      const media = slides[i];
+      if (i === index && canAutoplay()) { media.pause(); advance(); }
+      else { media.currentTime = 0; if (i === index) playIf(media, inView && !viewer.open && !document.hidden); }
+    }
+    function setPaused(value) {
+      paused = value;
+      toggle.innerHTML = paused ? playIcon : pauseIcon;
+      toggle.setAttribute('aria-label', paused ? 'Reproducir galería' : 'Pausar galería');
+      // Announce position changes only when they are not automatic.
+      count.setAttribute('aria-live', paused ? 'polite' : 'off');
+      syncVideo();
+      schedule();
     }
     function select(i) {
       index = i;
@@ -184,11 +223,30 @@
       renderSide();
       warm();
       syncVideo();
+      schedule();
+    }
+    // Scrolls started here are marked so that only the visitor's own swipes pause the gallery.
+    function scrollToIndex(i, smooth) {
+      const left = clamp(i) * main.clientWidth;
+      if (Math.abs(main.scrollLeft - left) < 2) return;
+      programmatic = clamp(i);
+      clearTimeout(programmaticTimer);
+      programmaticTimer = setTimeout(() => { programmatic = null; }, 1000);
+      main.scrollTo({ left, behavior: smooth ? behavior() : 'auto' });
     }
     function go(i, smooth = true) {
-      main.scrollTo({ left: clamp(i) * main.clientWidth, behavior: smooth ? behavior() : 'auto' });
+      scrollToIndex(i, smooth);
+    }
+    function navigate(i) {
+      setPaused(true);
+      go(i);
     }
     main.addEventListener('scroll', () => {
+      if (programmatic !== null) {
+        // The scroll counts as ours until it has been still for a moment (snapping adds late events).
+        clearTimeout(programmaticTimer);
+        programmaticTimer = setTimeout(() => { programmatic = null; }, 250);
+      } else if (!paused) setPaused(true);
       if (frame) return;
       frame = requestAnimationFrame(() => {
         frame = 0;
@@ -201,11 +259,27 @@
       if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
       event.preventDefault();
       const i = clamp(index + (event.key === 'ArrowRight' ? 1 : -1));
-      go(i);
+      navigate(i);
       slides[i].parentElement.focus({ preventScroll: true });
     });
-    prev.addEventListener('click', () => go(index - 1));
-    next.addEventListener('click', () => go(index + 1));
+    prev.addEventListener('click', () => navigate(index - 1));
+    next.addEventListener('click', () => navigate(index + 1));
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'tg-round';
+    toggle.dataset.trainingToggle = '';
+    next.after(toggle);
+    toggle.addEventListener('click', () => setPaused(!paused));
+    const mosaic = root.querySelector('.tg-mosaic');
+    mosaic.addEventListener('pointerenter', event => { if (event.pointerType === 'mouse') { hovering = true; schedule(); } });
+    mosaic.addEventListener('pointerleave', event => { if (event.pointerType === 'mouse') { hovering = false; schedule(); } });
+    root.addEventListener('focusin', event => {
+      keyboardFocus = event.target !== toggle && event.target.matches(':focus-visible');
+      schedule();
+    });
+    root.addEventListener('focusout', event => {
+      if (!root.contains(event.relatedTarget)) { keyboardFocus = false; schedule(); }
+    });
     root.querySelector('[data-training-open]').addEventListener('click', event => openViewer(index, event.currentTarget));
     // Keep the current photo aligned when the layout width changes.
     if ('ResizeObserver' in window) new ResizeObserver(() => go(index, false)).observe(main);
@@ -292,12 +366,13 @@
       new IntersectionObserver(entries => {
         if (entries.some(entry => entry.isIntersecting) && !near) { near = true; warm(); }
       }, { rootMargin: '600px 0px' }).observe(root);
-      new IntersectionObserver(entries => { inView = entries[0].isIntersecting; syncVideo(); }, { threshold: .15 }).observe(root);
+      new IntersectionObserver(entries => { inView = entries[0].isIntersecting; syncVideo(); schedule(); }, { threshold: .15 }).observe(root);
     }
-    document.addEventListener('visibilitychange', syncVideo);
-    motion.addEventListener?.('change', syncVideo);
+    document.addEventListener('visibilitychange', () => { syncVideo(); schedule(); });
+    motion.addEventListener?.('change', () => { if (motion.matches) setPaused(true); else syncVideo(); });
     const controls = root.querySelector('[data-training-controls]');
-    [prev, next, count].forEach(element => { element.hidden = total < 2; });
+    [prev, next, count, toggle].forEach(element => { element.hidden = total < 2; });
+    setPaused(paused);
     controls.hidden = false;
     if (!canOpen) root.querySelector('[data-training-open]').hidden = true;
     select(0);
